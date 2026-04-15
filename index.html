@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -986,11 +987,161 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* ================================================================
+       RESPONSIVE — TABLET & MOBILE
+       ================================================================ */
+
+    /* Mobile sidebar toggle (hamburger) */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 100;
+      background: rgba(17,17,17,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-main);
+      padding: 0;
+    }
+    .mobile-menu-toggle svg { width: 22px; height: 22px; }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      z-index: 49;
+    }
+    .sidebar-backdrop.open { display: block; }
+
+    /* ---------- TABLET (≤1024px) ---------- */
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .content-area { margin-left: 220px; }
+      .page { padding: 30px 28px; }
+      .top-nav { padding: 20px 28px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .cover-meta { grid-template-columns: repeat(2, 1fr); }
+      .mini-charts-grid { grid-template-columns: 1fr; gap: 16px; }
+      .photo-grid { grid-template-columns: 1fr; }
+      .section-title { font-size: 20px; }
+      .kpi-value { font-size: 24px; }
+      .cover-meta-value { font-size: 26px; }
+
+      /* Inline 2-col grids used throughout — collapse to 1 col */
+      [style*="grid-template-columns: repeat(2"],
+      [style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* ---------- MOBILE (≤768px) ---------- */
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+
+      .mobile-menu-toggle { display: flex; }
+
+      /* Sidebar becomes slide-over drawer */
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 260px;
+        box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .content-area { margin-left: 0; }
+
+      /* Ambient glow orbs smaller on mobile */
+      .dashboard-layout::before { width: 300px; height: 300px; top: -100px; right: -80px; }
+      .dashboard-layout::after { width: 400px; height: 400px; left: -100px; bottom: -200px; }
+
+      .page { padding: 24px 16px; }
+      .top-nav { padding: 18px 16px 18px 64px; flex-wrap: wrap; gap: 10px; }
+      .top-nav-tabs { gap: 12px; flex-wrap: wrap; }
+      .tab-title { font-size: 14px; margin-right: 8px; }
+      .tab { font-size: 10px; }
+
+      /* KPIs & meta grids full width */
+      .kpi-grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 28px; }
+      .kpi-card { padding: 20px; }
+      .kpi-value { font-size: 22px; }
+
+      .cover-meta { grid-template-columns: 1fr; gap: 14px; }
+      .cover-meta-item { padding: 20px; }
+      .cover-meta-value { font-size: 24px; }
+
+      .section-title { font-size: 18px; margin-bottom: 18px; }
+      .subsection-title { font-size: 15px; margin-top: 28px; }
+
+      /* Cards compact */
+      .card { padding: 18px; }
+      .risk-card { padding: 16px; }
+
+      /* Tables: horizontal scroll rather than squish */
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+      th, td { padding: 10px 12px; font-size: 12px; }
+
+      /* SVG charts: scale to container */
+      svg[viewBox] { max-width: 100%; height: auto; }
+      .chart-container svg { width: 100% !important; height: auto !important; }
+
+      /* Photos stack */
+      .photo-grid { grid-template-columns: 1fr; gap: 14px; }
+      .photo-item img { height: 220px; }
+
+      /* Mini risk gauge row stacks vertically */
+      .mini-chart-card > div[style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+      }
+
+      /* Collapse any inline 2-col / 3-col grids */
+      [style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Tooltip bubbles — don't overflow viewport */
+      .has-tooltip::after {
+        max-width: calc(100vw - 32px) !important;
+        left: 0 !important;
+        transform: none !important;
+        white-space: normal !important;
+      }
+    }
+
+    /* ---------- SMALL MOBILE (≤480px) ---------- */
+    @media (max-width: 480px) {
+      .page { padding: 20px 14px; }
+      .section-title { font-size: 17px; }
+      .kpi-value { font-size: 20px; }
+      .cover-meta-value { font-size: 22px; }
+      .photo-item img { height: 180px; }
+      th, td { padding: 8px 10px; font-size: 11px; }
+    }
   </style>
 </head>
 <body>
+<button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 <div class="dashboard-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-brand">
         <img src="SmartSource.png" alt="SmartSource.">
@@ -3633,6 +3784,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.3 });
 
   sections.forEach(s => { if (s.id) sectionObserver.observe(s); });
+
+  // --- Mobile sidebar toggle ---
+  const toggle = document.getElementById('mobileMenuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('open');
+  }
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('open');
+    });
+  }
+  if (backdrop) backdrop.addEventListener('click', closeSidebar);
+  // Close drawer when a nav link is clicked
+  document.querySelectorAll('.nav-menu a, .nav-menu li').forEach(el => {
+    el.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeSidebar();
+    });
+  });
 });
 </script>
 </body>
