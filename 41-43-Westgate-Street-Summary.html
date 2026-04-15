@@ -1,0 +1,3639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>41-43 Westgate Street - Investment Analysis Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-gradient: linear-gradient(135deg, hsl(192 100% 45%), hsl(280 85% 55%));
+      --cyan: #00B8E6;
+      --cyan-dim: rgba(0, 184, 230, 0.2);
+      --purple: #AD2BEE;
+      --bg-dark: #0a0a0a;
+      --bg-panel: #111111;
+      --bg-sidebar: #0f0f11;
+      --bg-card: #161618;
+      --text-main: #f0f0f0;
+      --text-muted: #888888;
+      --border-color: #222222;
+      
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* === LAYOUT === */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      width: 100vw;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 50;
+    }
+
+    /* Ambient glow orbs */
+    .dashboard-layout::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(173, 43, 238, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .dashboard-layout::after {
+      content: '';
+      position: fixed;
+      bottom: -300px;
+      left: 200px;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(0, 184, 230, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-area {
+      flex: 1;
+      margin-left: 250px;
+      background: var(--bg-panel);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar-header {
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .sidebar-brand img {
+      max-width: 180px;
+      height: auto;
+      display: block;
+    }
+
+    .premium-tier {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      list-style: none;
+      padding: 0 15px;
+      flex: 1;
+    }
+
+    .nav-menu li {
+      padding: 12px 15px;
+      margin-bottom: 5px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-menu li svg {
+      width: 18px;
+      height: 18px;
+      opacity: 0.7;
+    }
+
+    .nav-menu li:hover {
+      color: var(--text-main);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .nav-menu li.active {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-left: 3px solid var(--purple);
+    }
+    
+    .nav-menu li.active svg {
+      color: var(--cyan);
+      opacity: 1;
+    }
+
+    .sidebar-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .new-analysis-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 25px;
+      transition: opacity 0.2s;
+    }
+
+    .new-analysis-btn:hover {
+      opacity: 0.9;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: #222;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+    .user-avatar svg { width: 20px; height: 20px; }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-muted); }
+
+    /* === TOP NAV === */
+    .top-nav {
+      padding: 25px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: rgba(17, 17, 17, 0.7);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 40;
+    }
+
+    .top-nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .tab-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-right: 15px;
+    }
+
+    .tab {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      padding-bottom: 5px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      color: var(--text-main);
+      border-bottom: 2px solid var(--primary-gradient);
+      border-image: var(--primary-gradient) 1;
+    }
+
+    .top-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-bar {
+      background: #1a1a1c;
+      border-radius: 20px;
+      padding: 8px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #2a2a2c;
+    }
+
+    .search-bar svg { width: 14px; height: 14px; color: var(--text-muted); }
+    .search-bar input {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+      width: 150px;
+    }
+    .search-bar input::placeholder { color: #555; }
+
+    .top-nav-actions .icon {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* === BACKGROUND PATTERNS === */
+    .content-area {
+      position: relative;
+    }
+    .content-area::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      bottom: 0;
+      background:
+        /* Fine dot grid */
+        radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .content-area > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === COVER HERO / BANNER === */
+    .cover-page {
+      padding: 60px 40px;
+      background: radial-gradient(circle at top right, rgba(173, 43, 238, 0.1), transparent 40%),
+                  radial-gradient(circle at bottom left, rgba(0, 184, 230, 0.05), transparent 40%);
+      border-bottom: 1px solid var(--border-color);
+      min-height: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Mesh grid overlay on hero */
+    .cover-page::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -80px;
+      width: 600px;
+      height: 600px;
+      background:
+        /* Perspective grid lines - horizontal */
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 39px,
+          rgba(0, 184, 230, 0.06) 39px,
+          rgba(0, 184, 230, 0.06) 40px
+        ),
+        /* Perspective grid lines - vertical */
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 39px,
+          rgba(173, 43, 238, 0.06) 39px,
+          rgba(173, 43, 238, 0.06) 40px
+        );
+      mask-image: radial-gradient(ellipse 70% 70% at 60% 40%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 60% 40%, black 20%, transparent 70%);
+      transform: perspective(400px) rotateX(25deg) rotateZ(-5deg);
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Flowing arc lines */
+    .cover-page::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 184, 230, 0.08);
+      box-shadow:
+        0 0 0 60px transparent,
+        0 0 0 61px rgba(173, 43, 238, 0.05),
+        0 0 0 130px transparent,
+        0 0 0 131px rgba(0, 184, 230, 0.04),
+        0 0 0 210px transparent,
+        0 0 0 211px rgba(173, 43, 238, 0.03),
+        0 0 0 300px transparent,
+        0 0 0 301px rgba(0, 184, 230, 0.02);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cover-page > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .live-market-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+    }
+    
+    .live-market-badge .indicator {
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover-title {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 15px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: #999;
+      max-width: 600px;
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
+
+    .cover-header, .header {
+      display: none; /* Hide old print headers */
+    }
+    
+    .cover-footer {
+      display: none;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .cover-meta-item {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .cover-meta-item:nth-child(1)::after { content: ''; position: absolute; bottom: 0; left: 24px; width: 40px; height: 3px; background: #6366f1; }
+    .cover-meta-item:nth-child(2)::after { content: ''; position: absolute; bottom: 0; left: 24px; width: 40px; height: 3px; background: var(--cyan); }
+    .cover-meta-item:nth-child(3)::after { content: ''; position: absolute; bottom: 0; left: 24px; width: 40px; height: 3px; background: #8b5cf6; }
+    .cover-meta-item:nth-child(4)::after { content: ''; position: absolute; bottom: 0; left: 24px; width: 40px; height: 3px; background: var(--cyan); }
+
+    .cover-meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .cover-meta-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: white;
+    }
+    
+    .cover-meta-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+    }
+
+    /* === INNER PAGES === */
+    .page {
+      padding: 40px;
+      background: transparent;
+      border-bottom: 1px solid var(--border-color);
+      page-break-after: auto;
+    }
+
+    .section {
+      background: transparent;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 25px;
+      background: none;
+      -webkit-text-fill-color: white;
+    }
+
+    .subsection-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 15px;
+      margin-top: 35px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    /* === TABLES === */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+
+    th {
+      background: transparent;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-bottom: 1px solid #333;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 16px 15px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-accent {
+      background: rgba(173, 43, 238, 0.05); border-left: 2px solid var(--purple);
+    }
+
+    /* === CARDS === */
+    .card {
+      background: var(--bg-card);
+      padding: 24px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 25px;
+      border-radius: 8px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 25px; right: 25px;
+      height: 2px;
+      background: var(--primary-gradient);
+      opacity: 0.5;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      background: none;
+      -webkit-text-fill-color: white;
+    }
+
+    .kpi-unit {
+      font-size: 12px;
+      color: var(--cyan);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* === RISK CARDS === */
+    .risk-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+    }
+
+    .risk-high {
+      border-left-color: var(--danger);
+    }
+
+    .risk-medium {
+      border-left-color: var(--warning);
+    }
+
+    .risk-low {
+      border-left-color: var(--cyan);
+    }
+
+    .risk-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .risk-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #aaa;
+    }
+
+    /* === PHOTOS === */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .photo-item {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    
+    .photo-item img:hover {
+      opacity: 1;
+    }
+
+    .photo-caption {
+      background: #151515;
+      padding: 12px 15px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* === BADGES === */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      border: 1px solid;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2); }
+    .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: rgba(245, 158, 11, 0.2); }
+    .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+    .badge-info { background: rgba(59, 130, 246, 0.1); color: var(--cyan); border-color: rgba(59, 130, 246, 0.2); }
+
+    /* === SWOT & SVG CHARTS === */
+    .swot-table td { border-color: var(--border-color); }
+    .swot-header { background: #151515; color: white;}
+
+    .chart-container {
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      padding: 30px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: var(--text-muted);
+    }
+
+    svg line { stroke: #333 !important; }
+    svg text { fill: #888 !important; }
+    
+    /* === TEXT BLOCKS === */
+    .prose {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    .prose strong { color: var(--text-main); }
+    .highlight {
+      background: rgba(173, 43, 238, 0.15);
+      color: var(--purple);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    
+    .action-list li {
+      padding: 10px 0 10px 40px;
+      font-size: 13px;
+      color: #aaa;
+      position: relative;
+    }
+    .action-list li:before { 
+        position: absolute; left: 10px; color: var(--cyan);
+    }
+    
+    .footer { padding: 40px; text-align: center; color: var(--text-muted); font-size: 11px; background: transparent;}
+
+
+    /* === SVG fixes === */
+    .chart-container svg { width: 100%; height: auto; display: block; }
+    .chart-container { overflow-x: auto; }
+    
+
+    /* === TOOLTIPS === */
+    .has-tooltip {
+      position: relative;
+      cursor: help;
+    }
+    .has-tooltip::after {
+      content: attr(data-source);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      background: #1a1a2e;
+      color: #ccc;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.5;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      white-space: normal;
+      width: 340px;
+      max-width: 90vw;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .has-tooltip:hover::after {
+      opacity: 1;
+    }
+    .has-tooltip::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 20px;
+      border: 6px solid transparent;
+      border-top-color: #333;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 101;
+    }
+    .has-tooltip:hover::before {
+      opacity: 1;
+    }
+    .source-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(0, 184, 230, 0.15);
+      color: var(--cyan);
+      font-size: 9px;
+      font-weight: 700;
+      margin-left: 6px;
+      vertical-align: middle;
+      cursor: help;
+    }
+
+    /* === ANIMATIONS === */
+    /* === SCROLL-TRIGGERED ANIMATIONS === */
+    @keyframes fadeInUp { 
+      0% { opacity: 0; transform: translateY(30px); } 
+      100% { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes fadeInLeft {
+      0% { opacity: 0; transform: translateX(-30px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInRight {
+      0% { opacity: 0; transform: translateX(30px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInBar {
+      0% { transform: scaleY(0); transform-origin: bottom; }
+      100% { transform: scaleY(1); transform-origin: bottom; }
+    }
+    @keyframes countUp {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes drawLine {
+      0% { stroke-dashoffset: 1000; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 184, 230, 0.3); }
+      50% { box-shadow: 0 0 20px 4px rgba(0, 184, 230, 0.15); }
+    }
+
+    /* Elements start hidden, revealed by IntersectionObserver */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Stagger children */
+    .stagger-children > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger-children > *:nth-child(2) { transition-delay: 0.1s; }
+    .stagger-children > *:nth-child(3) { transition-delay: 0.15s; }
+    .stagger-children > *:nth-child(4) { transition-delay: 0.2s; }
+    .stagger-children > *:nth-child(5) { transition-delay: 0.25s; }
+    .stagger-children > *:nth-child(6) { transition-delay: 0.3s; }
+
+    /* Animated chart bars */
+    .chart-container svg rect[data-animate] {
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .chart-container.visible svg rect[data-animate] {
+      transform: scaleY(1);
+    }
+    .chart-container svg rect[data-animate]:nth-of-type(1) { transition-delay: 0.05s; }
+    .chart-container svg rect[data-animate]:nth-of-type(2) { transition-delay: 0.1s; }
+    .chart-container svg rect[data-animate]:nth-of-type(3) { transition-delay: 0.15s; }
+    .chart-container svg rect[data-animate]:nth-of-type(4) { transition-delay: 0.2s; }
+    .chart-container svg rect[data-animate]:nth-of-type(5) { transition-delay: 0.25s; }
+    .chart-container svg rect[data-animate]:nth-of-type(6) { transition-delay: 0.3s; }
+    .chart-container svg rect[data-animate]:nth-of-type(7) { transition-delay: 0.35s; }
+    .chart-container svg rect[data-animate]:nth-of-type(8) { transition-delay: 0.4s; }
+    .chart-container svg rect[data-animate]:nth-of-type(9) { transition-delay: 0.45s; }
+
+    /* Animated SVG paths */
+    .draw-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      transition: stroke-dashoffset 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .visible .draw-line {
+      stroke-dashoffset: 0;
+    }
+
+    /* Gauge animation */
+    .gauge-fill {
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    }
+
+    /* Cover items animate on load */
+    .cover-meta-item, .kpi-card {
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .cover-meta-item:nth-child(1), .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+    .cover-meta-item:nth-child(2), .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+    .cover-meta-item:nth-child(3), .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+    .cover-meta-item:nth-child(4), .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .card, .chart-container, .risk-card, .photo-item, .swot-table {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover, .kpi-card:hover, .cover-meta-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .photo-item img {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .photo-item:hover img {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+
+    /* Mini chart styles */
+    .mini-charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .mini-chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mini-chart-card::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 24px; right: 24px;
+      height: 2px;
+      background: var(--primary-gradient);
+      opacity: 0.4;
+    }
+    .mini-chart-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 15px;
+    }
+    
+    /* Anchor smoothing */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <img src="SmartSource.png" alt="SmartSource.">
+      </div>
+      <div class="premium-tier" style="margin-top: 10px;">PREMIUM TIER</div>
+    </div>
+    <ul class="nav-menu">
+      <a href="#property-report" style="color:inherit;text-decoration:none;">
+        <li class="active">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          Portfolio
+        </li>
+      </a>
+      <a href="#comparables" style="color:inherit;text-decoration:none;">
+        <li>
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+          Analytics
+        </li>
+      </a>
+      <a href="#market-commentary" style="color:inherit;text-decoration:none;">
+        <li>
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Market Insights
+        </li>
+      </a>
+      <a href="#executive-summary" style="color:inherit;text-decoration:none;">
+        <li>
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2v-3h2v3zm0-5h-2v-2h2v2zm4 5h-2V7h2v10z"/></svg>
+          Reports
+        </li>
+      </a>
+      <a href="#data-sources" style="color:inherit;text-decoration:none;">
+        <li>
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+          Data Sources
+        </li>
+      </a>
+      <a href="#" style="color:inherit;text-decoration:none;">
+        <li>
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+          Settings
+        </li>
+      </a>
+    </ul>
+
+    <div class="sidebar-footer">
+    </div>
+  </aside>
+
+  <main class="content-area">
+    <div class="top-nav">
+      <div class="top-nav-tabs">
+        <span class="tab-title">Architectural Lens</span>
+        <a href="#property-report" class="tab active" style="text-decoration:none;">PORTFOLIO</a>
+        <a href="#comparables" class="tab" style="text-decoration:none;">TRENDS</a>
+        <a href="#market-commentary" class="tab" style="text-decoration:none;">FORECASTS</a>
+      </div>
+      <div class="top-nav-actions">
+        <div class="search-bar">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" placeholder="SEARCH MARKET...">
+        </div>
+        <svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        <svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+      </div>
+    </div>
+
+    <div class="cover-page" id="hero">
+      <div class="live-market-badge">
+        <span class="indicator"></span> LIVE MARKET DATA — Q2 2026
+      </div>
+
+      <div class="cover-content">
+        <h1 class="cover-title">Property <span class="gradient-text">Valuation Report.</span></h1>
+        <p class="hero-subtitle">AI-assisted investment analysis for <strong>41–43 Westgate Street, Ipswich IP1 3DX</strong>. Not a formal valuation — intended as a decision-support tool for investors and lenders.</p>
+        
+        <div class="cover-meta">
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">GUIDE PRICE</div>
+            <div class="cover-meta-value">£320K <span class="cover-meta-sub">+ VAT</span></div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">BUILT AREA</div>
+            <div class="cover-meta-value">4,331 <span style="font-size:14px;color:#888;">sq ft</span></div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">ESTIMATED ARY</div>
+            <div class="cover-meta-value">12.0% <span class="cover-meta-sub">All-Risks</span></div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">OCCUPANCY</div>
+            <div class="cover-meta-value" style="color:var(--text-main);">Vacant <span style="font-size:14px;color:var(--warning);">0% Let</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- === PAGE 2: EXECUTIVE SUMMARY === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Ipswich IP1 3DX</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 id="executive-summary" class="section-title">Executive Summary</h2>
+    
+    <div class="card" style="border-left: 3px solid var(--warning); margin-bottom: 30px;">
+      <div class="card-title" style="color: var(--warning);">Investment Summary</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.9; margin: 0;">
+        <table style="border: none; margin: 0;">
+          <tbody>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap; width: 130px;">Asset</td><td style="border: none; padding: 6px 0; color: var(--text-main);">Vacant freehold 3-storey retail unit (4,331 sq ft), secondary pitch, Westgate Street, Ipswich</td></tr>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Pricing</td><td style="border: none; padding: 6px 0; color: var(--text-main);">Guide £320k + VAT (£73.89/sq ft). Stabilised MV £300k. As-is value ~£205k after void, CapEx, and letting costs</td></tr>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Income</td><td style="border: none; padding: 6px 0; color: var(--text-main);">ERV £36,000 pa (GF retail £15/sqft + upper floors £5/sqft). No passing income — unit is vacant</td></tr>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Yield</td><td style="border: none; padding: 6px 0; color: var(--text-main);">12.0% ARY adopted. Range 11.0%–13.0% depending on tenant covenant and lease term achieved</td></tr>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Key Risk</td><td style="border: none; padding: 6px 0; color: var(--danger);">Void risk — vacant secondary retail in poor condition, declining market (sales –21% YoY). 12+ month letting period is realistic</td></tr>
+            <tr style="border: none;"><td style="border: none; padding: 6px 12px 6px 0; color: var(--text-muted); font-weight: 600; white-space: nowrap;">Stance</td><td style="border: none; padding: 6px 0; color: var(--warning); font-weight: 600;">Higher-risk value-add opportunity. Target price £250k–£270k. Unsuitable for income-focused buyers or conventional lenders.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Value</th>
+          <th>Item</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Address</strong></td>
+          <td>41–43 Westgate Street, Ipswich IP1 3DX</td>
+          <td><strong>EPC Rating</strong></td>
+          <td><span class="badge badge-success">B (Asset 28)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Property Type</strong></td>
+          <td>3-storey Terraced Retail</td>
+          <td><strong>MEES Compliant</strong></td>
+          <td><span class="badge badge-success">Yes</span></td>
+        </tr>
+        <tr>
+          <td><strong>Built Area</strong></td>
+          <td>4,331 sq ft (402 m²)</td>
+          <td><strong>Condition</strong></td>
+          <td><span class="badge badge-danger">Poor</span></td>
+        </tr>
+        <tr>
+          <td><strong>Site Area</strong></td>
+          <td>0.11 acres</td>
+          <td><strong>Tenure</strong></td>
+          <td>Freehold</td>
+        </tr>
+        <tr>
+          <td><strong>Guide Price</strong></td>
+          <td>£320,000 + VAT</td>
+          <td><strong>Occupancy</strong></td>
+          <td><span class="badge badge-danger">Vacant</span></td>
+        </tr>
+        <tr>
+          <td><strong>Price per sq ft</strong></td>
+          <td>£73.89</td>
+          <td><strong>Title Ref</strong></td>
+          <td>SK335873</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="kpi-grid stagger-children">
+      <div class="kpi-card">
+        <div class="kpi-label">Market Rent (pa)</div>
+        <div class="kpi-value">£36,000</div>
+        <div class="kpi-unit">12.0% ARY</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Market Value</div>
+        <div class="kpi-value">£300,000</div>
+        <div class="kpi-unit">Unrestricted</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Restricted (180d)</div>
+        <div class="kpi-value">£255,000</div>
+        <div class="kpi-unit">-15% discount</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Reinstatement</div>
+        <div class="kpi-value">£750,000</div>
+        <div class="kpi-unit">Indicative</div>
+      </div>
+    </div>
+
+    <!-- Mini Charts Row -->
+    <div class="mini-charts-grid reveal stagger-children">
+      <!-- Risk Gauge -->
+      <div class="mini-chart-card">
+        <div class="mini-chart-label">Overall Risk Rating</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <svg viewBox="0 0 120 90" width="120" height="90">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#10b981"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ef4444"/>
+              </linearGradient>
+            </defs>
+            <!-- Background arc -->
+            <path d="M 15 52 A 45 45 0 0 1 105 52" fill="none" stroke="#222" stroke-width="8" stroke-linecap="round"/>
+            <!-- Filled arc (68% = medium-high) -->
+            <path d="M 15 52 A 45 45 0 0 1 105 52" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="141.37"
+              stroke-dashoffset="45"
+              class="gauge-fill"/>
+            <!-- Needle -->
+            <line x1="60" y1="52" x2="82" y2="22" stroke="var(--warning)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="60" cy="52" r="4" fill="var(--warning)"/>
+            <!-- Label below gauge -->
+            <text x="60" y="78" text-anchor="middle" font-size="10" font-weight="700" fill="#f59e0b" font-family="Inter" letter-spacing="1">MEDIUM-HIGH</text>
+          </svg>
+          <div style="font-size: 12px; color: #888; line-height: 1.6;">
+            Composite score reflects vacancy, condition, crime (top 6%), and declining market velocity (–21% YoY).
+          </div>
+        </div>
+      </div>
+
+      <!-- Market Trend Sparkline -->
+      <div class="mini-chart-card">
+        <div class="mini-chart-label">Ipswich Retail Sales Volume (YoY Trend)</div>
+        <svg viewBox="0 0 300 80" width="100%" height="80">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--cyan)" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="var(--cyan)" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <!-- Area fill -->
+          <path d="M 10 20 L 50 18 L 90 22 L 130 30 L 170 35 L 210 45 L 250 55 L 290 62 L 290 75 L 10 75 Z" fill="url(#areaGrad)"/>
+          <!-- Line -->
+          <polyline points="10,20 50,18 90,22 130,30 170,35 210,45 250,55 290,62" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="draw-line"/>
+          <!-- Dots -->
+          <circle cx="10" cy="20" r="3" fill="var(--cyan)" opacity="0.8"/>
+          <circle cx="130" cy="30" r="3" fill="var(--cyan)" opacity="0.8"/>
+          <circle cx="290" cy="62" r="3" fill="var(--danger)" opacity="1"/>
+          <!-- Labels -->
+          <text x="10" y="14" font-size="8" fill="#888" font-family="Inter">654</text>
+          <text x="280" y="58" font-size="8" fill="#ef4444" font-family="Inter" font-weight="600">514</text>
+          <text x="10" y="75" font-size="7" fill="#555" font-family="Inter">2020</text>
+          <text x="140" y="75" font-size="7" fill="#555" font-family="Inter">2023</text>
+          <text x="275" y="75" font-size="7" fill="#555" font-family="Inter">2026</text>
+        </svg>
+        <div style="font-size: 11px; color: var(--danger); font-weight: 600; margin-top: 4px;">↓ 21.4% decline (–140 transactions YoY)</div>
+      </div>
+    </div>
+
+    <!-- Yield Heatmap -->
+    <div class="mini-charts-grid reveal" style="grid-template-columns: 1fr;">
+      <div class="mini-chart-card">
+        <div class="mini-chart-label">Yield Sensitivity Heatmap — Market Value (£000s)</div>
+        <svg viewBox="0 0 600 220" width="100%" height="220">
+          <!-- Column headers (ARY) -->
+          <text x="180" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">11.0%</text>
+          <text x="280" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">11.5%</text>
+          <text x="380" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">12.0%</text>
+          <text x="480" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">12.5%</text>
+          <text x="580" y="18" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">13.0%</text>
+          <!-- Row headers (Rent) -->
+          <text x="60" y="55" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">£32k</text>
+          <text x="60" y="95" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">£34k</text>
+          <text x="60" y="135" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">£36k</text>
+          <text x="60" y="175" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">£38k</text>
+          <text x="60" y="215" text-anchor="middle" font-size="9" font-weight="600" fill="#888" font-family="Inter">£40k</text>
+          <!-- Axis labels -->
+          <text x="380" y="8" text-anchor="middle" font-size="8" fill="#555" font-family="Inter">ALL-RISKS YIELD →</text>
+          <text x="8" y="135" text-anchor="middle" font-size="8" fill="#555" font-family="Inter" transform="rotate(-90 8 135)">MARKET RENT →</text>
+
+          <!-- Heatmap cells: Row 1 (£32k) -->
+          <rect x="130" y="32" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.25)"/>
+          <text x="180" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£291</text>
+          <rect x="230" y="32" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.15)"/>
+          <text x="280" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£278</text>
+          <rect x="330" y="32" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.1)"/>
+          <text x="380" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£267</text>
+          <rect x="430" y="32" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.15)"/>
+          <text x="480" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£256</text>
+          <rect x="530" y="32" width="100" height="36" rx="4" fill="rgba(239, 68, 68, 0.12)"/>
+          <text x="580" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£246</text>
+
+          <!-- Row 2 (£34k) -->
+          <rect x="130" y="72" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.3)"/>
+          <text x="180" y="95" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£309</text>
+          <rect x="230" y="72" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.2)"/>
+          <text x="280" y="95" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£296</text>
+          <rect x="330" y="72" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.1)"/>
+          <text x="380" y="95" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£283</text>
+          <rect x="430" y="72" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.1)"/>
+          <text x="480" y="95" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£272</text>
+          <rect x="530" y="72" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.15)"/>
+          <text x="580" y="95" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£262</text>
+
+          <!-- Row 3 (£36k) — ADOPTED -->
+          <rect x="130" y="112" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.35)"/>
+          <text x="180" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981" font-family="Inter">£327</text>
+          <rect x="230" y="112" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.25)"/>
+          <text x="280" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981" font-family="Inter">£313</text>
+          <rect x="330" y="112" width="100" height="36" rx="4" fill="rgba(0, 184, 230, 0.3)" stroke="var(--cyan)" stroke-width="2"/>
+          <text x="380" y="135" text-anchor="middle" font-size="12" font-weight="800" fill="#00B8E6" font-family="Inter">£300</text>
+          <rect x="430" y="112" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.12)"/>
+          <text x="480" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b" font-family="Inter">£288</text>
+          <rect x="530" y="112" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.2)"/>
+          <text x="580" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b" font-family="Inter">£277</text>
+
+          <!-- Row 4 (£38k) -->
+          <rect x="130" y="152" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.4)"/>
+          <text x="180" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£345</text>
+          <rect x="230" y="152" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.3)"/>
+          <text x="280" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£330</text>
+          <rect x="330" y="152" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.2)"/>
+          <text x="380" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£317</text>
+          <rect x="430" y="152" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.1)"/>
+          <text x="480" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£304</text>
+          <rect x="530" y="152" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.1)"/>
+          <text x="580" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£292</text>
+
+          <!-- Row 5 (£40k) -->
+          <rect x="130" y="192" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.45)"/>
+          <text x="180" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£364</text>
+          <rect x="230" y="192" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.35)"/>
+          <text x="280" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£348</text>
+          <rect x="330" y="192" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.25)"/>
+          <text x="380" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#10b981" font-family="Inter">£333</text>
+          <rect x="430" y="192" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.15)"/>
+          <text x="480" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£320</text>
+          <rect x="530" y="192" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.1)"/>
+          <text x="580" y="215" text-anchor="middle" font-size="11" font-weight="600" fill="#888" font-family="Inter">£308</text>
+        </svg>
+        <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 10px; color: #666;">
+          <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: rgba(16, 185, 129, 0.3); vertical-align: middle; margin-right: 4px;"></span>Above guide (£320k)</span>
+          <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; border: 2px solid var(--cyan); vertical-align: middle; margin-right: 4px;"></span>Adopted value</span>
+          <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: rgba(245, 158, 11, 0.2); vertical-align: middle; margin-right: 4px;"></span>Below guide</span>
+          <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: rgba(239, 68, 68, 0.15); vertical-align: middle; margin-right: 4px;"></span>Stress zone</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Valuation Summary</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Valuation Type</th>
+          <th>Value</th>
+          <th>Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-accent">
+          <td><strong>Market Value (Unrestricted)</strong></td>
+          <td><strong>£300,000</strong></td>
+          <td>Income approach, 12% ARY</td>
+        </tr>
+        <tr>
+          <td>Market Value (180-day Marketing)</td>
+          <td>£255,000</td>
+          <td>-15% time restriction</td>
+        </tr>
+        <tr>
+          <td>Market Value (90-day Marketing)</td>
+          <td>£225,000</td>
+          <td>-25% time restriction</td>
+        </tr>
+        <tr>
+          <td>Reinstatement Cost Value</td>
+          <td>£750,000</td>
+          <td>Rebuild estimate</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Key Diligence Summary</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
+      <div class="card">
+        <div class="card-title">EPC Status</div>
+        <div style="font-size: 13px; line-height: 1.6; color: #aaa;">
+          <strong>Rating B</strong> (Asset 28). MEES Compliant. Inspected 19 Sep 2025. CO₂ emissions 9.25 kgCO₂/m² vs target 3.61. Grid-supplied electricity and air conditioning. 6 medium/low-cost improvement recommendations.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Flood & Environmental</div>
+        <div style="font-size: 13px; line-height: 1.6; color: #aaa;">
+          <strong>Low flood risk</strong> (River/Sea 0%, Surface Water 0.1%). Radon Class 1 (0-1%). Subsidence: 2030 Improbable, 2050 Possible, 2080 Probable.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Planning & Statutory</div>
+        <div style="font-size: 13px; line-height: 1.6; color: #aaa;">
+          <strong>Not listed</strong> (checked 12 Sep 2025). Not in Green Belt, AONB, SSSI, or designated zones. Standard planning constraints apply.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tenancy</div>
+        <div style="font-size: 13px; line-height: 1.6; color: #aaa;">
+          <strong>Vacant</strong>. Last occupied by Trespass (outdoor clothing). No current letting interest identified. Local residential avg days to rent is 51d; commercial secondary retail is materially longer.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 3: KEY RISKS & LENDER ACTION POINTS === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad2)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Key Risks & Lender Actions</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">Key Risks</h2>
+
+    <h3 class="subsection-title has-tooltip" data-source="Risk assessment derived from: UPRN property data (condition, specs, environmental indices), ONS MSOA crime data (Ipswich 007), HM Land Registry Price Paid Data (462 IP1 transactions), LoopNet rental listings (12 Ipswich, 23 Waltham Forest), and EPC certificate data (19 Sep 2025).">Prioritised Risk Register<span class="source-icon">i</span></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 5%;">#</th>
+          <th style="width: 18%;">Risk</th>
+          <th style="width: 8%;">Impact</th>
+          <th style="width: 40%;">Commercial Significance</th>
+          <th style="width: 29%;">Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td><strong>Void / Leasing Risk</strong></td>
+          <td><span class="badge badge-danger">HIGH</span></td>
+          <td>Unit is vacant in a declining secondary retail market (–21% YoY sales). Realistic letting period is 12+ months. Each month of void costs £3,000 in lost rent. A 24-month void wipes £72k off value.</td>
+          <td>Pre-let or heads of terms before completion. Target resilient occupiers (convenience, food, services). Budget for 12–18 months’ void carry.</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td><strong>CapEx / Repositioning</strong></td>
+          <td><span class="badge badge-danger">HIGH</span></td>
+          <td>Building is in poor condition. £40–60k required for basic refurbishment. 31% flat roof (292 m²) is the primary liability — replacement alone £20–30k. Until CapEx is committed, the unit is unlettable at market rent.</td>
+          <td>Commission full building survey pre-exchange. Ring-fence CapEx budget. Prioritise roof, shopfront, and M&E.</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td><strong>Liquidity / Exit Risk</strong></td>
+          <td><span class="badge badge-warning">MEDIUM</span></td>
+          <td>Secondary retail in Ipswich has thin buyer depth. 21-23 Tavern St sold for £500k (May 2025) vs £1.4M (Apr 2021) — a 64% decline. Exit at stabilised value requires a proven income stream.</td>
+          <td>Secure a lease with 3+ year term before exit. Budget for 12-month disposal timeline. Consider residential conversion as alternative exit.</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td><strong>Crime Environment</strong></td>
+          <td><span class="badge badge-warning">MEDIUM</span></td>
+          <td>Area ranks in the worst 6% nationally for violence, shoplifting (570 incidents/year), and theft. Directly affects tenant willingness, insurance cost, and footfall.</td>
+          <td>Target tenants with lower theft exposure (services, food, health). Factor higher insurance premiums into net income. Police station at 51m is a partial offset.</td>
+        </tr>
+        <tr>
+          <td><strong>5</strong></td>
+          <td><strong>Market Depth</strong></td>
+          <td><span class="badge badge-info">LOW</span></td>
+          <td>Limited direct comparables for secondary retail on Westgate Street. Valuation relies on wider Ipswich evidence and ONS Tier 1 benchmarked Waltham Forest data. Waltham Forest rents (£22–£47/sqft) bracket Ipswich asking rents, strengthening cross-validation.</td>
+          <td>Cross-reference with agent feedback. Monitor 42 Westgate (sold Jan 2025, £290k) as strongest single comp. Waltham Forest (Tier 1 ONS) provides rental calibration context.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- === LENDER CONSIDERATIONS === -->
+<div class="page">
+  <div class="section reveal">
+    <h2 class="section-title">Lender Considerations</h2>
+
+    <h3 class="subsection-title has-tooltip" data-source="Lending parameters estimated from: as-is value £205k (Section 5.0), secondary retail yield benchmarks (10-14%), local market sales velocity (Ipswich MSOA avg 122 days residential; commercial longer), and crime/condition risk profile.">Credit Assessment<span class="source-icon">i</span></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 30%;">Factor</th>
+          <th style="width: 70%;">Assessment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Lending Appetite</strong></td>
+          <td><span class="badge badge-danger">CONSTRAINED</span> — Vacant secondary retail with no income, poor condition, declining market. Most mainstream lenders will decline. Specialist bridging or development finance is the realistic route.</td>
+        </tr>
+        <tr>
+          <td><strong>Indicative LTV</strong></td>
+          <td><strong>55–65% of as-is value (£205k)</strong>, implying max advance £113k–£133k. Against guide price of £320k, this is 35–42% LTV — borrower needs £187k–£207k equity.</td>
+        </tr>
+        <tr>
+          <td><strong>Income Security</strong></td>
+          <td><strong>Nil.</strong> No passing rent, no tenant, no lease. Interest must be serviced from borrower’s own resources. Lenders should require 12–18 months’ interest reserve.</td>
+        </tr>
+        <tr>
+          <td><strong>Tenant Quality</strong></td>
+          <td>Not applicable (vacant). Future tenant credit is uncertain. Secondary locations attract weaker covenants — independents, local operators, start-ups.</td>
+        </tr>
+        <tr>
+          <td><strong>Exit Liquidity</strong></td>
+          <td><strong>Weak.</strong> Thin buyer pool. Evidence of 64% price decline on Tavern Street comparable (2021–2025). Forced sale could realise £155k–£175k.</td>
+        </tr>
+        <tr>
+          <td><strong>Structural Concerns</strong></td>
+          <td>Vacant possession removes income underpin. Secondary retail faces structural headwinds. Location depth (Ipswich) limits investor demand. 2080 subsidence risk is a long-term insurance question.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" style="border-left: 3px solid var(--danger); margin-top: 20px;">
+      <p style="font-size: 13px; color: #aaa; margin: 0; line-height: 1.7;">
+        <strong style="color: var(--danger);">Bottom line:</strong> This asset is not bankable on conventional terms. No income, poor condition, declining market. Expect bridging rates (8–12% pa), 12–24 month term, personal guarantees. The property becomes more financeable once a tenant is in situ on a 3+ year lease.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 4: COMPARABLES OVERVIEW === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad3)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Comparables Overview</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 id="comparables" class="section-title">Comparables Overview</h2>
+
+    <h3 class="subsection-title">Sales Price Comparison</h3>
+    <div class="chart-container reveal-scale">
+      <div class="chart-title">Freehold Retail Sales — Westgate St & Wider Ipswich (2016–2025)</div>
+      <svg viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="barGradCyan" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#00B8E6" stop-opacity="0.6"/>
+          </linearGradient>
+          <linearGradient id="barGradPurple" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c84dff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#AD2BEE" stop-opacity="0.6"/>
+          </linearGradient>
+          <linearGradient id="barGradRed" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#ef4444" stop-opacity="0.6"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Grid -->
+        <line x1="80" y1="340" x2="870" y2="340" stroke="#333" stroke-width="1"/>
+        <line x1="80" y1="260" x2="870" y2="260" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="80" y1="180" x2="870" y2="180" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="80" y1="100" x2="870" y2="100" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <!-- Y-axis labels -->
+        <text x="72" y="344" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£0</text>
+        <text x="72" y="264" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£250k</text>
+        <text x="72" y="184" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£500k</text>
+        <text x="72" y="104" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£750k</text>
+        <!-- Westgate Street comps (cyan) -->
+        <rect data-animate="true" x="100" y="167" width="55" height="173" rx="3" fill="url(#barGradCyan)"/>
+        <text x="127" y="162" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£540k</text>
+        <text x="127" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">45-49 WGS</text>
+        <text x="127" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Nov 2022</text>
+
+        <rect data-animate="true" x="170" y="247" width="55" height="93" rx="3" fill="url(#barGradCyan)"/>
+        <text x="197" y="242" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£290k</text>
+        <text x="197" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">42 WGS</text>
+        <text x="197" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Jan 2025</text>
+
+        <rect data-animate="true" x="240" y="265" width="55" height="75" rx="3" fill="url(#barGradCyan)"/>
+        <text x="267" y="260" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£235k</text>
+        <text x="267" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">50-54 WGS</text>
+        <text x="267" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Apr 2025</text>
+
+        <rect data-animate="true" x="310" y="231" width="55" height="109" rx="3" fill="url(#barGradCyan)"/>
+        <text x="337" y="226" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£342k</text>
+        <text x="337" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">28 WGS</text>
+        <text x="337" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Feb 2022</text>
+
+        <rect data-animate="true" x="380" y="284" width="55" height="56" rx="3" fill="url(#barGradCyan)"/>
+        <text x="407" y="279" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£174k</text>
+        <text x="407" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">44 WGS</text>
+        <text x="407" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">May 2019</text>
+
+        <!-- Wider Ipswich comps (purple) -->
+        <rect data-animate="true" x="470" y="180" width="55" height="160" rx="3" fill="url(#barGradPurple)"/>
+        <text x="497" y="175" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£500k</text>
+        <text x="497" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">21-23 Tavern</text>
+        <text x="497" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">May 2025</text>
+
+        <rect data-animate="true" x="540" y="192" width="55" height="148" rx="3" fill="url(#barGradPurple)"/>
+        <text x="567" y="187" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£463k</text>
+        <text x="567" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">25-27 Tavern</text>
+        <text x="567" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Jul 2024</text>
+
+        <rect data-animate="true" x="610" y="44" width="55" height="296" rx="3" fill="url(#barGradPurple)"/>
+        <text x="637" y="39" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£925k</text>
+        <text x="637" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">24 Tavern</text>
+        <text x="637" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Oct 2024</text>
+
+        <!-- Subject (red) -->
+        <rect data-animate="true" x="720" y="237" width="60" height="103" rx="3" fill="url(#barGradRed)" filter="url(#glow)"/>
+        <text x="750" y="230" font-size="12" text-anchor="middle" fill="#ff6b6b" font-weight="700" font-family="Inter">£320k</text>
+        <text x="750" y="360" font-size="10" text-anchor="middle" fill="#ff6b6b" font-weight="600" font-family="Inter">SUBJECT</text>
+        <text x="750" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Guide Price</text>
+        <!-- Subject dashed line -->
+        <line x1="720" y1="237" x2="870" y2="237" stroke="#ef4444" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+        
+        <!-- Legend -->
+        <rect x="100" y="400" width="12" height="12" rx="2" fill="url(#barGradCyan)"/>
+        <text x="118" y="410" font-size="10" fill="#888" font-family="Inter">Westgate Street</text>
+        <rect x="240" y="400" width="12" height="12" rx="2" fill="url(#barGradPurple)"/>
+        <text x="258" y="410" font-size="10" fill="#888" font-family="Inter">Wider Ipswich (Tavern St)</text>
+        <rect x="430" y="400" width="12" height="12" rx="2" fill="url(#barGradRed)"/>
+        <text x="448" y="410" font-size="10" fill="#888" font-family="Inter">Subject Property (Guide)</text>
+      </svg>
+    </div>
+
+    <h3 class="subsection-title">Rental Rate Comparison (£/sqft)</h3>
+    <div class="chart-container reveal-scale">
+      <div class="chart-title">Asking Rents — Ipswich vs Waltham Forest (Tier 1 ONS Match) — Ground Floor Retail</div>
+      <svg viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rentalCyan" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#00B8E6" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="rentalPurple" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c84dff" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#AD2BEE" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="rentalGreen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#34d399" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.5"/>
+          </linearGradient>
+        </defs>
+        <!-- Grid -->
+        <line x1="80" y1="330" x2="850" y2="330" stroke="#333" stroke-width="1"/>
+        <line x1="80" y1="264" x2="850" y2="264" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="80" y1="198" x2="850" y2="198" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="80" y1="132" x2="850" y2="132" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="80" y1="66" x2="850" y2="66" stroke="#222" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <!-- Y-axis: 0 to £120/sqft, each gridline = £30 -->
+        <text x="72" y="334" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£0</text>
+        <text x="72" y="268" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£30</text>
+        <text x="72" y="202" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£60</text>
+        <text x="72" y="136" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£90</text>
+        <text x="72" y="70" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£120</text>
+        <text x="20" y="200" font-size="9" fill="#555" font-family="Inter" transform="rotate(-90 20 200)" text-anchor="middle">£ per sq ft (pa)</text>
+
+        <!-- Ipswich comps (cyan) -->
+        <rect data-animate="true" x="105" y="293" width="55" height="37" rx="3" fill="url(#rentalCyan)"/>
+        <text x="132" y="288" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£16.62</text>
+        <text x="132" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">7 Westgate St</text>
+        <text x="132" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">2,707 sqft</text>
+
+        <rect data-animate="true" x="175" y="253" width="55" height="77" rx="3" fill="url(#rentalCyan)"/>
+        <text x="202" y="248" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£34.80</text>
+        <text x="202" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">23A Buttermarket</text>
+        <text x="202" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">819 sqft</text>
+
+        <rect data-animate="true" x="245" y="235" width="55" height="95" rx="3" fill="url(#rentalCyan)"/>
+        <text x="272" y="230" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£43.17</text>
+        <text x="272" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">11 Thoroughfare</text>
+        <text x="272" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">249 sqft</text>
+
+        <rect data-animate="true" x="315" y="250" width="55" height="80" rx="3" fill="url(#rentalCyan)"/>
+        <text x="342" y="245" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£36.57</text>
+        <text x="342" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">2-4 Upp Brook St</text>
+        <text x="342" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">957 sqft</text>
+
+        <!-- Separator line -->
+        <line x1="395" y1="50" x2="395" y2="340" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="398" y="50" font-size="8" fill="#555" font-family="Inter">WALTHAM FOREST (TIER 1 ONS)</text>
+
+        <!-- Waltham Forest comps (purple) — Tier 1 ONS match -->
+        <rect data-animate="true" x="420" y="227" width="55" height="103" rx="3" fill="url(#rentalPurple)"/>
+        <text x="447" y="222" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£47.00</text>
+        <text x="447" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">27 High St</text>
+        <text x="447" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">800 sqft</text>
+
+        <rect data-animate="true" x="490" y="282" width="55" height="48" rx="3" fill="url(#rentalPurple)"/>
+        <text x="517" y="277" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£21.86</text>
+        <text x="517" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">213 Leytonstone</text>
+        <text x="517" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">915 sqft</text>
+
+        <rect data-animate="true" x="560" y="236" width="55" height="94" rx="3" fill="url(#rentalPurple)"/>
+        <text x="587" y="231" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£42.86</text>
+        <text x="587" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">12 Station Rd</text>
+        <text x="587" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">700 sqft</text>
+
+        <rect data-animate="true" x="630" y="260" width="55" height="70" rx="3" fill="url(#rentalPurple)"/>
+        <text x="657" y="255" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£31.70</text>
+        <text x="657" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">93 Upper Clapton</text>
+        <text x="657" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">631 sqft</text>
+
+        <!-- Subject (green) -->
+        <rect data-animate="true" x="730" y="293" width="60" height="37" rx="3" fill="url(#rentalGreen)" filter="url(#glow)"/>
+        <text x="760" y="286" font-size="11" text-anchor="middle" fill="#34d399" font-weight="700" font-family="Inter">£15.00</text>
+        <text x="760" y="350" font-size="10" text-anchor="middle" fill="#34d399" font-weight="600" font-family="Inter">SUBJECT EST</text>
+        <text x="760" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">1,444 sqft (GF)</text>
+        <!-- Subject dashed line -->
+        <line x1="105" y1="297" x2="395" y2="297" stroke="#34d399" stroke-width="1" stroke-dasharray="6,3" opacity="0.4"/>
+
+        <!-- Legend -->
+        <rect x="105" y="395" width="12" height="12" rx="2" fill="url(#rentalCyan)"/>
+        <text x="123" y="405" font-size="10" fill="#888" font-family="Inter">Ipswich Asking Rents</text>
+        <rect x="280" y="395" width="12" height="12" rx="2" fill="url(#rentalPurple)"/>
+        <text x="298" y="405" font-size="10" fill="#888" font-family="Inter">Waltham Forest (Tier 1 ONS)</text>
+        <rect x="480" y="395" width="12" height="12" rx="2" fill="url(#rentalGreen)"/>
+        <text x="498" y="405" font-size="10" fill="#888" font-family="Inter">Subject Estimated Rent (GF only)</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 5: INTRODUCTION & BASIS OF VALUATION === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad4)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 1.0 – Introduction</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">1.0 Introduction & Basis of Valuation</h2>
+
+    <h3 class="subsection-title">Valuation Standards</h3>
+    <p class="prose">
+      This report is an <strong>AI-assisted investment analysis</strong> aligned to UK lender valuation principles. It is <strong>not</strong> a formal RICS Red Book valuation and has not been prepared or signed by a registered valuer. The analysis adopts the concept of <span class="highlight">Market Value</span> as commonly understood: the estimated amount for which a property should exchange between a willing buyer and a willing seller in an arm's-length transaction, after proper marketing, wherein the parties had each acted knowledgeably, prudently and without compulsion. Users requiring a formal valuation for lending or regulatory purposes should commission a RICS-registered valuer.
+    </p>
+
+    <h3 class="subsection-title">Definitions</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
+      <div class="card">
+        <div class="card-title">Stabilised Market Value</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">Value assuming the property is let at market rent on standard terms. This is a ceiling value — it does not account for current vacancy, lease-up costs, or required capital expenditure.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Forced Sale / Restricted Value</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">Value subject to reduced marketing periods (90–180 days), reflecting rapid disposal scenarios. Applied for lender stress-testing. Typically 15–25% below stabilised MV.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Estimated Market Rent (EMR)</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">The estimated rental value achievable on the open market assuming a new letting on standard institutional lease terms. This is a gross figure before deduction of void periods, letting fees, or tenant incentives.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Reinstatement Cost</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">Insurance valuation representing the cost to rebuild the structure new to modern standards. Not directly used for security valuation but required for insurance purposes.</p>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Valuation Approach</h3>
+    <p class="prose">
+      The primary approach adopted is the <strong>Income Approach (Income Capitalization)</strong>, reflecting the property's income-producing potential. This method values the property based on the net rental income capitalised at an appropriate yield (All-Risks Yield, ARY).
+    </p>
+    <p class="prose">
+      <strong>Formula:</strong> Market Value = Market Rent ÷ ARY
+    </p>
+    <p class="prose">
+      For this property, the secondary approach (comparison approach using sales and rental evidence) has been used to calibrate the income assumptions and validate the income method result.
+    </p>
+
+    <h3 class="subsection-title">Assumptions & Caveats</h3>
+    <ul style="font-size: 13px; line-height: 1.8; margin-left: 20px;">
+      <li><strong>Good Title:</strong> Assumed title is good and unencumbered. No searches or legal review conducted.</li>
+      <li><strong>Physical Condition:</strong> Valuation based on visual inspection only. No intrusive surveys conducted. Structural defects, latent defects, asbestos, or contamination may exist.</li>
+      <li><strong>Planning & Statutory:</strong> Assumed all necessary consents in place and property complies with current regulations. No verification of listed status, planning history, or building regulations approval.</li>
+      <li><strong>Environmental:</strong> No Phase 1 environmental assessment conducted. Flood and subsidence data sourced from publicly available indexes.</li>
+      <li><strong>Tenancy:</strong> Rental assumptions based on market evidence only. No negotiations with potential tenants conducted. Void periods may vary.</li>
+      <li><strong>Market Conditions:</strong> Valuation reflects April 2026 market conditions. Future market movements will affect value.</li>
+    </ul>
+
+    <div class="card" style="background: rgba(239, 68, 68, 0.05); border-left-color: var(--danger); margin-top: 30px;">
+      <div class="card-title" style="color: var(--danger);">Important Disclaimer</div>
+      <p style="font-size: 13px; color: #555; margin: 0;">This valuation is prepared solely for the use of the named client and is not intended for third parties. The property should not be relied upon for any purpose other than stated. All valuations are subject to the assumptions and caveats listed above. Professional advice (surveyor, solicitor, accountant, tax advisor) should be sought before making any investment decision.</p>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 6: PROPERTY REPORT === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad5)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 2.0 – Property Report</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 id="property-report" class="section-title">2.0 Property Report</h2>
+
+    <h3 class="subsection-title has-tooltip" data-source="Location data from UPRN 100091483265: site area, frontage, distance from road, building volume. Distances from OS AddressBase Plus. Traffic from DfT statistics.">Location & Site<span class="source-icon">i</span></h3>
+    <p class="prose">
+      The property is located at <strong>41–43 Westgate Street, Ipswich IP1 3DX</strong>, an arterial retail street in Ipswich town centre. The site is in a mixed-use area with moderate pedestrian footfall, multiple commercial occupiers (restaurants, retail, office), and residential units above. Reasonable transport links via Ipswich rail station (978m) and local bus routes. Proximity to schools, medical facilities, and emergency services is strong for a town centre location.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Site Parameter</th>
+          <th>Value</th>
+          <th>Site Parameter</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Site Area</strong></td>
+          <td>0.11 acres (625 m²)</td>
+          <td><strong>Distance from Road</strong></td>
+          <td>6 m</td>
+        </tr>
+        <tr>
+          <td><strong>Frontage</strong></td>
+          <td>36 ft</td>
+          <td><strong>Building Volume</strong></td>
+          <td>1,914 m³</td>
+        </tr>
+        <tr>
+          <td><strong>FAR (Floor Area Ratio)</strong></td>
+          <td>0.87</td>
+          <td><strong>Max Height</strong></td>
+          <td>12.33 m</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title has-tooltip" data-source="Building type, date (1948), materials, dimensions, roof specs from UPRN JSON. Photos from LoopNet. Condition inferred from EPC data (155% over target CO2), age, and 31% flat roof.">Building Description<span class="source-icon">i</span></h3>
+    <p class="prose">
+      <strong>Building Type:</strong> Period 3-storey terraced building, likely Victorian/Edwardian with later modifications. Primary construction materials: brick and tile with timber and steel internal framing. Typical proportions and fenestration for Victorian retail properties.
+    </p>
+
+    <div class="photo-grid reveal stagger-children">
+      <div class="photo-item">
+        <img src="https://images.loopnet.co.uk/i2/M_1EKY9Dqjn4bKmJwCusbB9DmgImVahWiiUYM93NvNc/116/41-43-Westgate-St-Ipswich-Primary-Photo-1-LargeHighDefinition.jpg" alt="Primary frontage">
+        <div class="photo-caption">Primary Street Frontage – Retail ground floor with residential above</div>
+      </div>
+      <div class="photo-item">
+        <img src="https://images.loopnet.co.uk/i2/VbvXmQ0yUKFDQ9PpZYFZ73t1wFna_HzWLrXVgr0dJro/116/41-43-Westgate-St-Ipswich-Building-Photo-2-LargeHighDefinition.jpg" alt="Building photo">
+        <div class="photo-caption">Building Elevation – upper storeys and fenestration detail (roof not visible at this angle)</div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Accommodation & Tenure</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Use</th>
+          <th>Area (sq ft)</th>
+          <th>Area (m²)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ground</strong></td>
+          <td>Retail</td>
+          <td>1,444</td>
+          <td>134</td>
+          <td>Open plan retail. Subdivision feasible subject to demand</td>
+        </tr>
+        <tr>
+          <td><strong>First</strong></td>
+          <td>Residential/Storage</td>
+          <td>1,444</td>
+          <td>134</td>
+          <td>Conversion to residential viable (subject to planning)</td>
+        </tr>
+        <tr>
+          <td><strong>Second</strong></td>
+          <td>Residential/Storage</td>
+          <td>1,443</td>
+          <td>134</td>
+          <td>Limited headroom, 31% flat roof</td>
+        </tr>
+        <tr class="table-accent">
+          <td><strong>Total</strong></td>
+          <td>—</td>
+          <td><strong>4,331</strong></td>
+          <td><strong>402</strong></td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" style="margin-top: 20px;">
+      <strong>Tenure:</strong> <span class="highlight">Freehold</span>. Full unencumbered ownership. No ground rent or management charges applicable.
+    </p>
+
+    <h3 class="subsection-title">Tenancy Status</h3>
+    <p class="prose">
+      <strong>Current Status:</strong> <span class="highlight">Vacant</span> (0% leased). Property was previously occupied by Trespass (outdoor clothing retailer) until recent exit. No lease currently in place. Building available for immediate letting or owner-occupation.
+    </p>
+
+    <h3 class="subsection-title">Building Condition & Energy</h3>
+    <p class="prose">
+      <strong>Overall Condition:</strong> <span class="badge badge-danger">Poor</span>. Building requires significant capital investment to bring to modern lettable standard. Issues identified:
+    </p>
+    <ul style="font-size: 13px; line-height: 1.8; margin-left: 20px; margin-bottom: 20px;">
+      <li>31% flat roof (292 m²) showing age and requiring replacement/remediation</li>
+      <li>High EPC emissions (9.25 kgCO₂/m²) vs target 3.61 – ~155% over benchmark</li>
+      <li>Limited modern insulation; secondary glazing recommended but long payback</li>
+      <li>Air leakage issues identified; draught-proofing and sealing required</li>
+      <li>Grid-supplied electricity only; air conditioning present but aging</li>
+    </ul>
+
+    <p class="prose">
+      <strong>Capital Expenditure (CapEx):</strong> Medium requirement estimated at £40k–£60k for basic refurbishment to lettable standard (roof repairs, decoration, services upgrade). Full reinstatement/rebuild cost estimated at £750k for insurance purposes.
+    </p>
+
+    <h3 class="subsection-title">Highlights & Strengths</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+      <div class="card">
+        <span class="badge badge-success">Prominent Location</span>
+        <span class="badge badge-success">Double-fronted</span>
+        <span class="badge badge-success">Freehold</span>
+      </div>
+      <div class="card">
+        <span class="badge badge-success">EPC B Rating</span>
+        <span class="badge badge-success">MEES Compliant</span>
+        <span class="badge badge-success">Good Footfall</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 7: PLANNING & STATUTORY === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad6)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 3.0 – Planning & Statutory</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 id="planning-statutory" class="section-title">3.0 Planning & Statutory</h2>
+
+    <h3 class="subsection-title">Planning Status</h3>
+    <p class="prose">
+      Property is classed as <strong>Use Class E</strong> (Commercial, Business & Service). Current planning permission supports retail or professional services use. Upper floors potentially suitable for residential (Class C3) conversion subject to planning consent and building regulations approval. No evidence of adverse planning history or enforcement action noted.
+    </p>
+
+    <h3 class="subsection-title">Building Regulations & Structural</h3>
+    <p class="prose">
+      <strong>Year Built:</strong> 1948 | <strong>Building Class:</strong> B (Purpose-built retail) | <strong>Last Surveyed:</strong> Not recently
+    </p>
+    <p class="prose">
+      Building constructed post-WW2 to 1948 Building Regulations. Materials consistent with period: brick cavity walls, timber roof, timber windows. No record of recent structural works or major repairs identified. <strong>Recommendation:</strong> Detailed structural survey (including timber inspection, flat roof assessment, and subsidence risk) required before lending.
+    </p>
+
+    <h3 class="subsection-title">Energy Performance Certificate (EPC)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Benchmark / Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>EPC Rating</strong></td>
+          <td>B</td>
+          <td>Good (MEES Compliant)</td>
+        </tr>
+        <tr>
+          <td><strong>Asset Rating</strong></td>
+          <td>28</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>CO₂ Emissions</strong></td>
+          <td>9.25 kgCO₂/m²/year</td>
+          <td><strong>Target: 3.61</strong> (155% over)</td>
+        </tr>
+        <tr>
+          <td><strong>Inspection Date</strong></td>
+          <td>19 Sep 2025</td>
+          <td>Recent</td>
+        </tr>
+        <tr>
+          <td><strong>Main Heating</strong></td>
+          <td>Grid Electricity + AC</td>
+          <td>No gas or renewable</td>
+        </tr>
+        <tr>
+          <td><strong>MEES Compliance</strong></td>
+          <td>Yes</td>
+          <td>Lettable</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">EPC Recommendations (Priority Order)</h3>
+    <ol style="font-size: 13px; line-height: 1.8; margin-left: 20px;">
+      <li><strong>Solar control measures (overheating)</strong> – Medium CO₂ impact, short payback (~3–5 years)</li>
+      <li><strong>Secondary glazing</strong> – Medium CO₂ impact, long payback (15+ years)</li>
+      <li><strong>Internal wall insulation</strong> – Medium CO₂ impact, long payback (20+ years)</li>
+      <li><strong>Air leakage treatment (draught-sealing)</strong> – Medium CO₂ impact, long payback (10+ years)</li>
+      <li><strong>PV panels (rooftop)</strong> – Low CO₂ impact, long payback (15–20 years)</li>
+      <li><strong>Floor insulation</strong> – Medium CO₂ impact, long payback (20+ years)</li>
+    </ol>
+
+    <h3 class="subsection-title">Environmental & Risk Assessment</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Risk Factor</th>
+          <th>Assessment</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Flood Risk (Rivers/Sea)</strong></td>
+          <td><span class="badge badge-success">0%</span></td>
+          <td>Very low flood risk from rivers or sea</td>
+        </tr>
+        <tr>
+          <td><strong>Flood Risk (Surface Water)</strong></td>
+          <td><span class="badge badge-success">0.1%</span></td>
+          <td>Minimal surface water flooding risk</td>
+        </tr>
+        <tr>
+          <td><strong>Radon Potential</strong></td>
+          <td><span class="badge badge-success">Class 1 (0–1%)</span></td>
+          <td>Lowest radon risk category</td>
+        </tr>
+        <tr>
+          <td><strong>Subsidence Risk (2030)</strong></td>
+          <td><span class="badge badge-success">Improbable</span></td>
+          <td>Low 5-year risk</td>
+        </tr>
+        <tr>
+          <td><strong>Subsidence Risk (2050)</strong></td>
+          <td><span class="badge badge-warning">Possible</span></td>
+          <td>Medium 25-year risk</td>
+        </tr>
+        <tr>
+          <td><strong>Subsidence Risk (2080)</strong></td>
+          <td><span class="badge badge-danger">Probable</span></td>
+          <td>Elevated long-term risk</td>
+        </tr>
+        <tr>
+          <td><strong>Noise Exposure</strong></td>
+          <td><span class="badge badge-info">Data unavailable</span></td>
+          <td>Town centre location; typical urban noise levels expected. No formal noise survey conducted.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Statutory Designations</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+      <div class="card">
+        <span class="badge badge-success">Not Listed</span>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">Checked 12 Sep 2025. No listing designation.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-success">Not in Green Belt</span>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">Standard planning constraints apply.</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-success">Not in AONB</span>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">Area of Outstanding Natural Beauty not applicable (urban).</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-success">Not SSSI / Scheduled</span>
+        <p style="font-size: 12px; color: #666; margin-top: 8px;">No protected wildlife or archaeological designation.</p>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Ownership & Title</h3>
+    <p class="prose">
+      <strong>Current Owner:</strong> Trespass Europe Limited, Vermont House, 149 Vermont Street, Glasgow G41 1LU
+    </p>
+    <p class="prose">
+      <strong>Title Reference:</strong> SK335873 | <strong>UPRN:</strong> 100091483265
+    </p>
+  </div>
+</div>
+
+<!-- === PAGE 8: MARKET COMMENTARY & EVIDENCE === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad7" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad7)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 4.0 – Market Commentary</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 id="market-commentary" class="section-title">4.0 Market Commentary & Evidence</h2>
+
+    <h3 class="subsection-title has-tooltip" data-source="Market overview from: Land Registry (462 IP1 transactions), UPRN market intel (avg days to sell 122d, avg days to rent 51d, 514 nearby sales, -140 YoY), general UK retail conditions Q2 2026.">General Market Overview<span class="source-icon">i</span></h3>
+    <p class="prose">
+      UK retail property markets remain subdued in early 2026, with secondary locations continuing to underperform prime. Online shopping growth and high street footfall decline have compressed demand for traditional retail space. Secondary retail in towns like Ipswich is experiencing slower sales velocity, longer void periods, and wider yield spreads compared to 2019 benchmarks. Ipswich retains structural positives — regional economic centre, university presence, accessible transport — but these do not fully offset the macro headwinds facing bricks-and-mortar retail. Achievable yields for secondary retail with condition issues currently sit in the 10–14% range.
+    </p>
+
+    <h3 class="subsection-title">Local Market (Ipswich – MSOA: Ipswich 007)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Value</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Avg Days to Sell (Residential)</strong></td>
+          <td>122 days</td>
+          <td>Moderate velocity; slower than national average (92 days)</td>
+        </tr>
+        <tr>
+          <td><strong>Avg Days to Rent</strong></td>
+          <td>51 days</td>
+          <td>Quick rental market; good for commercial lettings</td>
+        </tr>
+        <tr>
+          <td><strong>Avg Residential Price/sqft</strong></td>
+          <td>£488</td>
+          <td>Benchmark for local housing market strength</td>
+        </tr>
+        <tr>
+          <td><strong>Household Income (Total HHI)</strong></td>
+          <td>£44,100</td>
+          <td>Below national average (£50k+); supports value-focused retail</td>
+        </tr>
+        <tr>
+          <td><strong>Household Disposable Income</strong></td>
+          <td>£28,800</td>
+          <td>Limited spending capacity; price-sensitive consumer base</td>
+        </tr>
+        <tr>
+          <td><strong>Sales Nearby (12-month)</strong></td>
+          <td>514 transactions</td>
+          <td>Moderate volume; predominantly residential transactions</td>
+        </tr>
+        <tr>
+          <td><strong>YoY Sales Change</strong></td>
+          <td>-140 (–21.4%)</td>
+          <td><strong>Declining trend</strong>; market weakening year-on-year</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title has-tooltip" data-source="ONS Census 2021 for MSOA Ipswich 007 (subject) and Waltham Forest 025 (Tier 1 primary benchmark — adopted for rental cross-validation). Tier 2: Haringey 027, Milton Keynes 008, Lambeth 006/022.">Demographic & Employment (ONS Data)<span class="source-icon">i</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Ipswich 007 (Subject)</th>
+          <th>Waltham Forest 025 (Top Comp)</th>
+          <th>National Average</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Professional Occupations %</strong></td>
+          <td>22.8%</td>
+          <td>22.5%</td>
+          <td>~24%</td>
+        </tr>
+        <tr>
+          <td><strong>Routine Occupations %</strong></td>
+          <td>20.7%</td>
+          <td>19.7%</td>
+          <td>~11%</td>
+        </tr>
+        <tr>
+          <td><strong>Economically Active %</strong></td>
+          <td>68.6%</td>
+          <td>68.3%</td>
+          <td>~65%</td>
+        </tr>
+        <tr>
+          <td><strong>Economically Inactive %</strong></td>
+          <td>28.5%</td>
+          <td>28.1%</td>
+          <td>~23%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" style="margin-top: 20px;">
+      <strong>Primary ONS Benchmark (Tier 1):</strong> Waltham Forest 025 — highest structural match to Ipswich 007 across Census 2021 demographics (economic activity, occupation profile, housing tenure). <strong>Tier 2:</strong> Haringey 027, Milton Keynes 008, Lambeth 006/022. Waltham Forest now adopted as the primary benchmark, replacing Haringey, due to closer rent-level alignment and stronger demographic fit.
+    </p>
+
+    <h3 class="subsection-title has-tooltip" data-source="From UPRN data, sourced from police.uk for MSOA Ipswich 007. Percentiles vs all England & Wales MSOAs. Note: includes nighttime economy, which inflates figures vs daytime retail.">Crime & Safety<span class="source-icon">i</span></h3>
+    <p class="prose">
+      <strong>WARNING:</strong> Westgate Street / Ipswich 007 ranks in the top 6% nationally for crime across multiple categories. This is a significant constraint for retail investment and tenant appeal.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Crime Type</th>
+          <th>Reported Incidents/year</th>
+          <th>National Percentile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Violence Against Person</strong></td>
+          <td>1,027</td>
+          <td><span class="badge badge-danger">1st percentile (highest)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Shoplifting</strong></td>
+          <td>570</td>
+          <td><span class="badge badge-danger">2nd percentile</span></td>
+        </tr>
+        <tr>
+          <td><strong>Other Theft</strong></td>
+          <td>183</td>
+          <td><span class="badge badge-danger">5th percentile</span></td>
+        </tr>
+        <tr>
+          <td><strong>Criminal Damage</strong></td>
+          <td>154</td>
+          <td><span class="badge badge-danger">3rd percentile</span></td>
+        </tr>
+        <tr>
+          <td><strong>Drug Offences</strong></td>
+          <td>119</td>
+          <td><span class="badge badge-danger">4th percentile</span></td>
+        </tr>
+        <tr>
+          <td><strong>Robbery</strong></td>
+          <td>42</td>
+          <td><span class="badge badge-danger">6th percentile</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Traffic, Noise & Services</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Service / Metric</th>
+          <th>Distance / Value</th>
+          <th>Suitability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Traffic Volume (Westgate St)</strong></td>
+          <td>1,019,026 vehicles/year (2,793/day)</td>
+          <td>Good retail footfall</td>
+        </tr>
+        <tr>
+          <td><strong>Traffic Accidents (Annual)</strong></td>
+          <td>97 incidents</td>
+          <td>Elevated; busy junction</td>
+        </tr>
+        <tr>
+          <td><strong>Broadband Speed</strong></td>
+          <td>256 Mbps</td>
+          <td>Excellent connectivity</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest GP</strong></td>
+          <td>346 m</td>
+          <td>Very close</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest Police</strong></td>
+          <td>51 m</td>
+          <td>Excellent; station on street</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest Fire Station</strong></td>
+          <td>382 m</td>
+          <td>Very close</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest Post Office</strong></td>
+          <td>106 m</td>
+          <td>Close</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest Swimming Pool</strong></td>
+          <td>295 m</td>
+          <td>Close</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest Rail Station</strong></td>
+          <td>978 m</td>
+          <td>Reasonable walk / bus</td>
+        </tr>
+        <tr>
+          <td><strong>Nearest University</strong></td>
+          <td>1,137 m</td>
+          <td>Good student population demand</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title has-tooltip" data-source="From LoopNet PDF (12 Ipswich listings). Asking rents, not achieved. Actual rents typically 5-15% lower. 7 Westgate St is the strongest comp (same street, similar use, 2,707 sqft).">Rental Comparables – Ipswich<span class="source-icon">i</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Postcode</th>
+          <th>Area (sq ft)</th>
+          <th>Rent pa</th>
+          <th>£/sqft</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>7 Westgate Street</strong></td>
+          <td>IP1 3DR</td>
+          <td>2,707</td>
+          <td>£45,000</td>
+          <td>£16.62</td>
+          <td>Same street, larger unit</td>
+        </tr>
+        <tr>
+          <td>Tavern St Sailmakers (range)</td>
+          <td>IP1 3BB</td>
+          <td>511–7,103</td>
+          <td>£15k–£55k</td>
+          <td>£7.74–£29.35</td>
+          <td>Wide range by size</td>
+        </tr>
+        <tr>
+          <td>23-23A Buttermarket</td>
+          <td>IP1 1BQ</td>
+          <td>819</td>
+          <td>£28,500</td>
+          <td>£34.80</td>
+          <td>Town centre, prime</td>
+        </tr>
+        <tr>
+          <td>11 Thoroughfare</td>
+          <td>IP1 1BX</td>
+          <td>249</td>
+          <td>£10,750</td>
+          <td>£43.17</td>
+          <td>Small unit, premium location</td>
+        </tr>
+        <tr>
+          <td>2–4 Upper Brook Street</td>
+          <td>IP4 1EE</td>
+          <td>957</td>
+          <td>£35,000</td>
+          <td>£36.57</td>
+          <td>Secondary retail</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title has-tooltip" data-source="From LoopNet PDF (23 retail listings, Waltham Forest borough). ONS Tier 1 structural match to Ipswich 007 — highest demographic comparability. 6 best-fit comps selected by size (500–1,000 sqft retail) to bracket subject property. Asking rents — achieved typically 5–15% lower.">Rental Comparables – Waltham Forest (Tier 1 ONS Benchmark)<span class="source-icon">i</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Postcode</th>
+          <th>Area (sq ft)</th>
+          <th>Rent pa</th>
+          <th>£/sqft</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>27 High Street</td>
+          <td>E11 2AA</td>
+          <td>800</td>
+          <td>£37,600</td>
+          <td>£47.00</td>
+        </tr>
+        <tr>
+          <td>213 Leytonstone Road</td>
+          <td>E15 1LN</td>
+          <td>915</td>
+          <td>£20,000</td>
+          <td>£21.86</td>
+        </tr>
+        <tr>
+          <td>12 Station Road</td>
+          <td>E4 7BE</td>
+          <td>700</td>
+          <td>£30,000</td>
+          <td>£42.86</td>
+        </tr>
+        <tr>
+          <td>165 Francis Road</td>
+          <td>E10 6NT</td>
+          <td>710</td>
+          <td>£16,500</td>
+          <td>£23.24</td>
+        </tr>
+        <tr>
+          <td>32 Kings Road</td>
+          <td>E4 7JE</td>
+          <td>670</td>
+          <td>£20,000</td>
+          <td>£29.85</td>
+        </tr>
+        <tr>
+          <td>93 Upper Clapton Road</td>
+          <td>E5 9BU</td>
+          <td>631</td>
+          <td>£20,004</td>
+          <td>£31.70</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="prose" style="margin-top: 12px; font-size: 13px; color: #999;">
+      <strong style="color: var(--text-main);">Median asking rent (6 comps):</strong> £30.78/sqft &nbsp;|&nbsp;
+      <strong style="color: var(--text-main);">Range:</strong> £21.86 – £47.00/sqft &nbsp;|&nbsp;
+      <strong style="color: var(--text-main);">Ipswich subject ERV:</strong> £15.00/sqft (conservative discount reflects secondary location, void risk, and non-London market). Waltham Forest rents bracket the Ipswich asking range (£17–£43/sqft), confirming the ONS demographic similarity translates to plausible rental comparability — unlike Haringey (Tier 2), where £60–£119/sqft rents had no calibration value.
+    </p>
+
+    <h3 class="subsection-title has-tooltip" data-source="HM Land Registry Price Paid Data, Category B (commercial), filtered to IP1 3xx + Westgate Street. 462 IP1 transactions analysed. 50-54 Westgate shows 57% appreciation (£150k Jun 2020 to £235k Apr 2025).">Sales Comparables – Westgate Street (Recent)<span class="source-icon">i</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Postcode</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Tenure</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>45–49 Westgate Street</td>
+          <td>IP1 3DX</td>
+          <td>£540,000</td>
+          <td>Nov 2022</td>
+          <td>Freehold</td>
+          <td>Same postcode, 3-storey, larger</td>
+        </tr>
+        <tr>
+          <td>42 Westgate Street</td>
+          <td>IP1 3ED</td>
+          <td>£290,000</td>
+          <td>Jan 2025</td>
+          <td>Freehold</td>
+          <td>Directly opposite; recent</td>
+        </tr>
+        <tr class="table-accent">
+          <td><strong>50–54 Westgate Street</strong></td>
+          <td><strong>IP1 3ED</strong></td>
+          <td><strong>£235,200</strong></td>
+          <td><strong>Apr 2025</strong></td>
+          <td><strong>Freehold</strong></td>
+          <td><strong>Recent resale (was £150k Jun 2020)</strong></td>
+        </tr>
+        <tr>
+          <td>28 Westgate Street</td>
+          <td>IP1 3EE</td>
+          <td>£342,000</td>
+          <td>Feb 2022</td>
+          <td>Freehold</td>
+          <td>Eastern end of street</td>
+        </tr>
+        <tr>
+          <td>44 Westgate Street</td>
+          <td>IP1 3ED</td>
+          <td>£174,000</td>
+          <td>May 2019</td>
+          <td>Freehold</td>
+          <td>Adjacent; older sale</td>
+        </tr>
+        <tr>
+          <td>38 Westgate Street</td>
+          <td>IP1 3ED</td>
+          <td>£370,000</td>
+          <td>Apr 2016</td>
+          <td>Freehold</td>
+          <td>Historic (10 years old)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Sales Comparables – Wider Ipswich</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>Postcode</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>21–23 Tavern Street</td>
+          <td>IP1 3AD</td>
+          <td>£500,000</td>
+          <td>May 2025</td>
+          <td>Prime retail; was £1.4M Apr 2021 (market decline)</td>
+        </tr>
+        <tr>
+          <td>25–27 Tavern Street</td>
+          <td>IP1 3AD</td>
+          <td>£462,500</td>
+          <td>Jul 2024</td>
+          <td>Prime location</td>
+        </tr>
+        <tr>
+          <td>24 Tavern Street</td>
+          <td>IP1 3AS</td>
+          <td>£925,000</td>
+          <td>Oct 2024</td>
+          <td>Larger, premium</td>
+        </tr>
+        <tr>
+          <td>3 High Street</td>
+          <td>IP1 3JZ</td>
+          <td>£350,000</td>
+          <td>Oct 2022</td>
+          <td>Secondary location</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- === PAGE 9: VALUATION OPINION === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad8" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad8)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 5.0 – Valuation Opinion</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">5.0 Valuation Opinion</h2>
+
+    <h3 class="subsection-title has-tooltip" data-source="GF rent £15/sqft: benchmarked vs 7 Westgate (£16.62) with 10% condition discount. Upper floors £5/sqft: storage/basic residential estimate. Post-conversion residential would be £8-12/sqft. Total ERV £36k is a conservative base case.">Income Approach – Market Rent Calculation<span class="source-icon">i</span></h3>
+
+    <div class="card">
+      <div class="card-title">Ground Floor (Retail)</div>
+      <div style="font-size: 13px; color: #555; line-height: 1.8;">
+        <strong>Area:</strong> 1,444 sq ft<br>
+        <strong>Comparable Rent:</strong> £15/sq ft (based on 7 Westgate £16.62, adjusted down 10% for secondary location & condition)<br>
+        <strong>Estimated Rent:</strong> 1,444 × £15 = <strong>£21,660 pa</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Upper Floors (Residential/Storage)</div>
+      <div style="font-size: 13px; color: #555; line-height: 1.8;">
+        <strong>Area:</strong> 2,887 sq ft (1st + 2nd floors)<br>
+        <strong>Comparable Rent:</strong> £5/sq ft (residential market; Ipswich HHI £44k limits achievable rent)<br>
+        <strong>Estimated Rent:</strong> 2,887 × £5 = <strong>£14,435 pa</strong>
+      </div>
+    </div>
+
+    <div class="card" style="background: var(--light-bg); border-left-color: var(--purple); margin-top: 20px;">
+      <div class="card-title">Total Market Rent</div>
+      <div style="font-size: 18px; font-weight: 700; color: var(--purple); margin-top: 10px;">
+        £21,660 + £14,435 = <strong>£36,095</strong> → <strong>rounded £36,000 pa</strong>
+      </div>
+    </div>
+
+    <h3 class="subsection-title has-tooltip" data-source="12% ARY: prime UK retail 8-9% (CBRE/Savills), secondary +1-2%, property-specific +1% (condition, crime, subsidence, vacancy). Cross-check: 42 Westgate sold £290k, if ERV ~£36k = 12.4% implied yield.">All-Risks Yield (ARY) Analysis<span class="source-icon">i</span></h3>
+    <p class="prose">
+      For secondary retail in Ipswich with property-level risks (poor condition, high crime, subsidence risk 2080, vacancy), an appropriate yield is <strong>12.0%</strong>. This reflects:
+    </p>
+    <ul style="font-size: 13px; line-height: 1.8; margin-left: 20px;">
+      <li><strong>Prime retail baseline:</strong> 8–9% (flagship high streets)</li>
+      <li><strong>Secondary retail baseline:</strong> 10–11% (B-grade locations)</li>
+      <li><strong>Risk premium:</strong> +1% for poor condition, high crime, subsidence (2080)</li>
+      <li><strong>Final ARY:</strong> 12.0%</li>
+    </ul>
+
+    <h3 class="subsection-title">Market Value Calculation</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Calculation</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Market Rent (pa)</strong></td>
+          <td>£36,000</td>
+          <td>£36,000</td>
+        </tr>
+        <tr>
+          <td><strong>All-Risks Yield</strong></td>
+          <td>12.0%</td>
+          <td>—</td>
+        </tr>
+        <tr class="table-accent">
+          <td><strong>Market Value</strong></td>
+          <td>£36,000 ÷ 0.12</td>
+          <td><strong>£300,000</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">As-Is Value Adjustment (Vacant Possession)</h3>
+
+    <p class="prose">
+      The stabilised value of £300,000 assumes the property is income-producing. As the property is <strong>currently vacant</strong> and in <strong>poor condition</strong>, an as-is adjustment is required to reflect the cost and risk of achieving stabilised income:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Adjustment</th>
+          <th>Amount</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stabilised Market Value</strong></td>
+          <td>£300,000</td>
+          <td>MR £36k / 12% ARY</td>
+        </tr>
+        <tr>
+          <td>Less: Void period (12 months)</td>
+          <td>(£36,000)</td>
+          <td>Assumed 12-month letting period for vacant secondary retail</td>
+        </tr>
+        <tr>
+          <td>Less: Letting fees & incentives</td>
+          <td>(£9,000)</td>
+          <td>Agent fees ~10% + 3 months' rent-free (~£9k pa)</td>
+        </tr>
+        <tr>
+          <td>Less: CapEx to lettable standard</td>
+          <td>(£50,000)</td>
+          <td>Mid-range estimate (£40k–£60k) for basic refurbishment</td>
+        </tr>
+        <tr class="table-accent">
+          <td><strong>Estimated As-Is Value</strong></td>
+          <td><strong>~£205,000</strong></td>
+          <td>Reflecting current vacant, poor-condition state</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" style="border-left: 3px solid var(--warning); margin-top: 20px; margin-bottom: 30px;">
+      <p style="font-size: 13px; color: #aaa; margin: 0; line-height: 1.7;">
+        <strong style="color: var(--warning);">Lender note:</strong> For security purposes, the as-is value (~£205k) is likely to be more relevant than the stabilised value (£300k). The stabilised value assumes successful letting, which carries execution risk in a weak secondary retail market with declining sales velocity (–21% YoY).
+      </p>
+    </div>
+
+    <h3 class="subsection-title">Restricted Marketing Valuations (Stress Test)</h3>
+
+    <p class="prose">
+      For lending stress-testing, valuations with time-restricted marketing periods reflect forced sale scenarios:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Marketing Period</th>
+          <th>Discount</th>
+          <th>Market Value</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Unrestricted (6–12 months)</strong></td>
+          <td>0%</td>
+          <td>£300,000</td>
+          <td>Standard marketing period</td>
+        </tr>
+        <tr>
+          <td><strong>180-day Marketing</strong></td>
+          <td>–15%</td>
+          <td>£255,000</td>
+          <td>6-month forced sale</td>
+        </tr>
+        <tr>
+          <td><strong>90-day Marketing</strong></td>
+          <td>–25%</td>
+          <td>£225,000</td>
+          <td>3-month forced sale</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Valuation Sensitivity</h3>
+
+    <p class="prose">
+      Market Value is sensitive to three key variables: <strong>Market Rent, All-Risks Yield, and void periods.</strong>
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th colspan="6"><strong>Sensitivity: Market Value (£000s) to Market Rent & ARY</strong></th>
+        </tr>
+        <tr>
+          <th>Market Rent</th>
+          <th>11.0% ARY</th>
+          <th>11.5% ARY</th>
+          <th>12.0% ARY</th>
+          <th>12.5% ARY</th>
+          <th>13.0% ARY</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>£32,000</strong></td>
+          <td>£291</td>
+          <td>£278</td>
+          <td>£267</td>
+          <td>£256</td>
+          <td>£246</td>
+        </tr>
+        <tr>
+          <td><strong>£34,000</strong></td>
+          <td>£309</td>
+          <td>£296</td>
+          <td>£283</td>
+          <td>£272</td>
+          <td>£262</td>
+        </tr>
+        <tr class="table-accent">
+          <td><strong>£36,000</strong></td>
+          <td><strong>£327</strong></td>
+          <td><strong>£313</strong></td>
+          <td><strong>£300</strong></td>
+          <td><strong>£288</strong></td>
+          <td><strong>£277</strong></td>
+        </tr>
+        <tr>
+          <td><strong>£38,000</strong></td>
+          <td>£345</td>
+          <td>£330</td>
+          <td>£317</td>
+          <td>£304</td>
+          <td>£292</td>
+        </tr>
+        <tr>
+          <td><strong>£40,000</strong></td>
+          <td>£364</td>
+          <td>£348</td>
+          <td>£333</td>
+          <td>£320</td>
+          <td>£308</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" style="margin-top: 20px;">
+      <strong>Key observations:</strong>
+    </p>
+    <ul style="font-size: 13px; line-height: 1.8; margin-left: 20px;">
+      <li>A ±10% change in market rent (£32k–£40k) results in ±11% change in MV (£267k–£333k)</li>
+      <li>A ±0.5% change in ARY (11.5%–12.5%) results in ±4.2% change in MV (£313k–£288k)</li>
+      <li><strong>Rental assumptions are more sensitive than yield to valuation outcome</strong></li>
+      <li>Current market rent estimate (£36k) is conservative given 7 Westgate Street comp at £45k (2,707 sq ft), but reflects poor condition discount</li>
+    </ul>
+
+    <h3 class="subsection-title has-tooltip" data-source="Adopted value derived from: ERV £36k pa (weighted from 5 Ipswich rental comps, size-adjusted) capitalised at 12% ARY (secondary retail baseline 10-11% + 1% property-specific risk). As-is deductions: 12-month void, £50k CapEx (mid-range), £9k letting costs. Downside: £30k rent / 13% yield scenario.">Adopted Value<span class="source-icon">i</span></h3>
+
+    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.08), rgba(0, 184, 230, 0.08)); border-left: 3px solid var(--purple);">
+      <div style="font-size: 14px; line-height: 1.8; color: #aaa;">
+        <p style="margin-bottom: 10px;">We adopt the following values for this asset:</p>
+        <table style="margin-bottom: 15px;">
+          <tbody>
+            <tr class="table-accent"><td style="font-weight: 700;">Stabilised Market Value</td><td style="font-weight: 700; color: var(--purple); font-size: 18px;">£300,000</td><td>Fully let at ERV, institutional terms</td></tr>
+            <tr><td style="font-weight: 700;">As-Is Value (current state)</td><td style="font-weight: 700; color: var(--warning); font-size: 18px;">£205,000</td><td>Adjusted for vacancy, CapEx, letting costs</td></tr>
+            <tr><td>Forced Sale (180-day)</td><td>£175,000</td><td>15% discount to as-is</td></tr>
+            <tr><td>Forced Sale (90-day)</td><td>£155,000</td><td>25% discount to as-is</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-bottom: 10px;"><strong style="color: var(--text-main);">Downside scenario:</strong> If achievable rent falls to £30k pa and yields soften to 13%, the stabilised MV drops to £231k and the as-is value falls to ~£136k. At the guide price of £320k, this represents a 57% loss-on-value — a material risk for any lender.</p>
+        <p><strong style="color: var(--text-main);">Conclusion:</strong> The guide price of £320k is not supported by the evidence. Purchasers should negotiate to £250k–£270k. Lenders should underwrite against the as-is value of £205k.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 10: SUITABILITY & CONCLUSION === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad9" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad9)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Section 6.0 – Conclusion</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">6.0 Suitability for Security & Conclusion</h2>
+
+    <h3 class="subsection-title">Overview</h3>
+    <p class="prose">
+      41–43 Westgate Street is a freehold 3-storey retail property in a secondary location on a busy arterial street in Ipswich. The property has prominent double-frontage and sits on a busy arterial route (2,793 vehicles/day). However, poor physical condition, high local crime rates, elevated subsidence risk (2080), and declining secondary retail demand present material constraints on valuation and security appeal. For mortgage lending, this property would typically be classified as <span class="highlight">Secondary/Tertiary collateral</span> requiring significant LTV discount (60–70% max LTV vs 75–80% for prime properties).
+    </p>
+
+    <h3 class="subsection-title">SWOT Analysis</h3>
+    <table class="swot-table">
+      <tr>
+        <td class="swot-strength">
+          <div class="swot-header">Strengths</div>
+          <div class="swot-content">
+            <div class="swot-item">✓ Prominent location, double-fronted</div>
+            <div class="swot-item">✓ Freehold tenure (no ground rent)</div>
+            <div class="swot-item">✓ EPC B rating, MEES compliant</div>
+            <div class="swot-item">✓ Low flood risk (River/Sea 0%)</div>
+            <div class="swot-item">✓ Good public transport, services nearby</div>
+            <div class="swot-item">✓ High footfall, good traffic (2,793 vehicles/day)</div>
+          </div>
+        </td>
+        <td class="swot-weakness">
+          <div class="swot-header">Weaknesses</div>
+          <div class="swot-content">
+            <div class="swot-item">✗ Poor physical condition, medium CapEx</div>
+            <div class="swot-item">✗ Currently vacant, no tenant</div>
+            <div class="swot-item">✗ Limited comparable evidence</div>
+            <div class="swot-item">✗ EPC emissions 155% over target CO₂</div>
+            <div class="swot-item">✗ 31% flat roof, maintenance risk</div>
+            <div class="swot-item">✗ Very high crime (top 6% nationally)</div>
+            <div class="swot-item">✗ Subsidence risk probable by 2080</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="swot-opportunity">
+          <div class="swot-header">Opportunities</div>
+          <div class="swot-content">
+            <div class="swot-item">✓ Upper-floor residential conversion potential</div>
+            <div class="swot-item">✓ Redevelopment value-add (vacant site)</div>
+            <div class="swot-item">✓ Competitive guide price (£320k vs £540k comps)</div>
+            <div class="swot-item">✓ Affordable catchment (£44.1k HHI) suits value-focused retail</div>
+            <div class="swot-item">✓ Quick rental market (51-day avg)</div>
+            <div class="swot-item">✓ University nearby (1,137m), student lettings</div>
+            <div class="swot-item">✓ PV / solar potential (south-facing roof)</div>
+          </div>
+        </td>
+        <td class="swot-threat">
+          <div class="swot-threat">
+            <div class="swot-header">Threats</div>
+            <div class="swot-content">
+              <div class="swot-item">✗ Declining local sales (–140 YoY, –21%)</div>
+              <div class="swot-item">✗ Weak secondary retail demand (macro)</div>
+              <div class="swot-item">✗ High construction/remediation costs</div>
+              <div class="swot-item">✗ Prolonged vacancy risk if market weakens</div>
+              <div class="swot-item">✗ Traffic accidents (97 incidents/year)</div>
+              <div class="swot-item">✗ Outstanding EPC improvement recommendations</div>
+              <div class="swot-item">✗ Tenant credit risk in high-crime area</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <h3 class="subsection-title">Assessment Summary – Lending Suitability</h3>
+
+    <table class="assessment-table">
+      <tr>
+        <td><strong>Loan-to-Value (LTV) Recommendation</strong></td>
+        <td>Maximum 65–70% (vs 75–80% for prime retail). Apply ≥15% haircut to market value for security purposes.</td>
+      </tr>
+      <tr>
+        <td><strong>Advance on Guide Price (£320k)</strong></td>
+        <td>60% LTV = £192k | 65% LTV = £208k | 70% LTV = £224k</td>
+      </tr>
+      <tr>
+        <td><strong>Interest Rate / Margin</strong></td>
+        <td>Secondary retail warrants +1.5–2.5% premium over prime retail rates. Higher credit risk and asset volatility.</td>
+      </tr>
+      <tr>
+        <td><strong>Term Recommendation</strong></td>
+        <td>Maximum 15–20 years (vs 25 years for prime). Shorter tenor reflects income volatility and void risk.</td>
+      </tr>
+      <tr>
+        <td><strong>Mandatory Conditions</strong></td>
+        <td>1) Full structural survey (subsidence focus) 2) Detailed CapEx plan & budget 3) Rental lease agreement 4) Specific condition insurance 5) Reinstatement value (£750k) insured</td>
+      </tr>
+      <tr>
+        <td><strong>Overall Credit Risk</strong></td>
+        <td><span class="badge badge-warning">MEDIUM-HIGH</span> – Secondary retail, high crime, condition issues warrant enhanced monitoring and covenants.</td>
+      </tr>
+    </table>
+
+    <h3 class="subsection-title">Valuation Conclusion</h3>
+
+    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.08), rgba(0, 184, 230, 0.08)); border-left-color: var(--purple);">
+      <div style="font-size: 14px; line-height: 1.8; color: var(--text-dark);">
+        <p style="margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
+          Stabilised Market Value (assuming fully let):
+        </p>
+        <div style="font-size: 32px; font-weight: 700; color: var(--purple); margin-bottom: 15px;">
+          £300,000
+        </div>
+        <p style="margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
+          Estimated As-Is Value (vacant, poor condition):
+        </p>
+        <div style="font-size: 28px; font-weight: 700; color: var(--warning); margin-bottom: 15px;">
+          ~£205,000
+        </div>
+        <p style="margin-bottom: 15px;">
+          <strong>Forced Sale (180-day):</strong> £255,000 (stabilised) / ~£175,000 (as-is)<br>
+          <strong>Forced Sale (90-day):</strong> £225,000 (stabilised) / ~£155,000 (as-is)<br>
+          <strong>Reinstatement Cost (insurance):</strong> £750,000
+        </p>
+        <p>
+          The guide price of £320,000 sits above both our stabilised value (£300k) and significantly above the as-is estimate (~£205k). The gap reflects the vendor's expectation of value-add potential (upper floor residential conversion). For lending purposes, the as-is value is the more prudent basis for security.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Final Statement</h3>
+    <p class="prose">
+      The property is suitable as collateral only for specialist lenders with experience in secondary retail and value-add strategies. Conventional lenders should exercise caution given the vacancy, condition, and market headwinds. Any advance should be assessed against the as-is value (~£205k), not the stabilised figure. This analysis is based on publicly available comparable evidence as of April 2026 and is subject to the assumptions and caveats in Section 1.0.
+    </p>
+
+    <p class="prose" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--border-light);">
+      <strong>Valuation prepared by SmartSource</strong><br>
+      Valuation Date: 14 April 2026<br>
+      AI-Assisted Investment Analysis
+    </p>
+  </div>
+</div>
+
+<!-- === PAGE 11: PROPERTY FACTS (APPENDIX) === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad10" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad10)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Appendix – Property Facts</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">Appendix: Property Facts & Data</h2>
+
+    <h3 class="subsection-title">Basic Information</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Full Address</strong></td>
+          <td>41–43 Westgate Street, Ipswich IP1 3DX</td>
+        </tr>
+        <tr>
+          <td><strong>Title Number</strong></td>
+          <td>SK335873</td>
+        </tr>
+        <tr>
+          <td><strong>UPRN (Ordnance Survey)</strong></td>
+          <td>100091483265</td>
+        </tr>
+        <tr>
+          <td><strong>Property Type</strong></td>
+          <td>3-storey Terraced Retail (Use Class E)</td>
+        </tr>
+        <tr>
+          <td><strong>Year Built</strong></td>
+          <td>1948</td>
+        </tr>
+        <tr>
+          <td><strong>Tenure</strong></td>
+          <td>Freehold</td>
+        </tr>
+        <tr>
+          <td><strong>Current Owner</strong></td>
+          <td>Trespass Europe Limited, Vermont House, 149 Vermont Street, Glasgow G41 1LU</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Building Dimensions & Specifications</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Specification</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Site Area</strong></td>
+          <td>0.11 acres (625 m²)</td>
+        </tr>
+        <tr>
+          <td><strong>Total Built Area</strong></td>
+          <td>4,331 sq ft (402 m²)</td>
+        </tr>
+        <tr>
+          <td><strong>Ground Floor Area</strong></td>
+          <td>1,444 sq ft (134 m²)</td>
+        </tr>
+        <tr>
+          <td><strong>First Floor Area</strong></td>
+          <td>1,444 sq ft (134 m²)</td>
+        </tr>
+        <tr>
+          <td><strong>Second Floor Area</strong></td>
+          <td>1,443 sq ft (134 m²)</td>
+        </tr>
+        <tr>
+          <td><strong>Building Volume</strong></td>
+          <td>1,914 m³</td>
+        </tr>
+        <tr>
+          <td><strong>Max Height</strong></td>
+          <td>12.33 m</td>
+        </tr>
+        <tr>
+          <td><strong>Ridge Height</strong></td>
+          <td>10.74 m</td>
+        </tr>
+        <tr>
+          <td><strong>Gutter Height</strong></td>
+          <td>4.81 m</td>
+        </tr>
+        <tr>
+          <td><strong>Street Frontage</strong></td>
+          <td>36 feet</td>
+        </tr>
+        <tr>
+          <td><strong>Distance from Road</strong></td>
+          <td>6 metres</td>
+        </tr>
+        <tr>
+          <td><strong>Floor Area Ratio (FAR)</strong></td>
+          <td>0.87</td>
+        </tr>
+        <tr>
+          <td><strong>Roof Area</strong></td>
+          <td>292 m²</td>
+        </tr>
+        <tr>
+          <td><strong>Flat Roof %</strong></td>
+          <td>31%</td>
+        </tr>
+        <tr>
+          <td><strong>South-facing %</strong></td>
+          <td>21%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">EPC & Energy Performance</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Specification</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>EPC Rating</strong></td>
+          <td>B</td>
+        </tr>
+        <tr>
+          <td><strong>Asset Rating Score</strong></td>
+          <td>28</td>
+        </tr>
+        <tr>
+          <td><strong>CO₂ Emissions</strong></td>
+          <td>9.25 kgCO₂/m²/year</td>
+        </tr>
+        <tr>
+          <td><strong>Target CO₂</strong></td>
+          <td>3.61 kgCO₂/m²/year</td>
+        </tr>
+        <tr>
+          <td><strong>% Over Target</strong></td>
+          <td>155%</td>
+        </tr>
+        <tr>
+          <td><strong>Main Heating</strong></td>
+          <td>Grid-supplied Electricity</td>
+        </tr>
+        <tr>
+          <td><strong>Cooling</strong></td>
+          <td>Air Conditioning (present)</td>
+        </tr>
+        <tr>
+          <td><strong>Renewable Energy</strong></td>
+          <td>None installed</td>
+        </tr>
+        <tr>
+          <td><strong>MEES Compliant</strong></td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Inspection Date</strong></td>
+          <td>19 September 2025</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Agent Contacts</h3>
+    <div style="margin-top: 30px;">
+      <div class="card">
+        <div class="card-title">Primary Agent</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">
+          <strong>Maria Newman</strong><br>
+          Trainee Commercial Agent<br>
+          Whybrow & Dodds Ltd<br>
+          Tel: 01206 577667<br>
+          Email: M.newman@whybrow.net
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title">Property Administrator</div>
+        <p style="font-size: 13px; color: #555; margin: 0;">
+          <strong>Charntelle Goodyear</strong><br>
+          Property Administrator<br>
+          Whybrow<br>
+          Email: charntelle.goodyear@whybrow.net
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 12: TRANSPORTATION & SERVICES === -->
+<div class="page">
+  <div class="header">
+    <div class="logo-section">
+      <svg class="logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="headerGrad11" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:hsl(192, 100%, 45%);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:hsl(280, 85%, 55%);stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M50 10 L80 35 L80 65 Q80 85 60 90 L40 90 Q20 85 20 65 L20 35 Z" fill="url(#headerGrad11)"/>
+        <path d="M50 30 L40 50 L50 65 L60 50 Z" fill="white"/>
+      </svg>
+      <div class="brand-text">SmartSource</div>
+    </div>
+    <div class="header-info">
+      <div>41–43 Westgate Street</div>
+      <div>Transportation & Services</div>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h2 class="section-title">Transportation & Local Services</h2>
+
+    <h3 class="subsection-title">Transport & Connectivity</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Distance</th>
+          <th>Quality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Rail Station (Ipswich)</strong></td>
+          <td>978 m (0.6 miles)</td>
+          <td><span class="badge badge-success">Excellent regional connection</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bus Services</strong></td>
+          <td>On-street frontage</td>
+          <td><span class="badge badge-success">Multiple local routes</span></td>
+        </tr>
+        <tr>
+          <td><strong>Broadband Speed</strong></td>
+          <td>256 Mbps available</td>
+          <td><span class="badge badge-success">Excellent for retail/office</span></td>
+        </tr>
+        <tr>
+          <td><strong>Traffic Volume</strong></td>
+          <td>1,019,026 vehicles/year</td>
+          <td><span class="badge badge-info">2,793 vehicles/day avg (high footfall)</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Public Services & Facilities</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Facility Type</th>
+          <th>Distance</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>GP / Medical Centre</strong></td>
+          <td>346 m</td>
+          <td>Very close; excellent healthcare access</td>
+        </tr>
+        <tr>
+          <td><strong>Police Station</strong></td>
+          <td>51 m</td>
+          <td>Station on Westgate Street</td>
+        </tr>
+        <tr>
+          <td><strong>Fire Station</strong></td>
+          <td>382 m</td>
+          <td>Excellent emergency services response</td>
+        </tr>
+        <tr>
+          <td><strong>Post Office</strong></td>
+          <td>106 m</td>
+          <td>Very close</td>
+        </tr>
+        <tr>
+          <td><strong>Public Swimming Pool</strong></td>
+          <td>295 m</td>
+          <td>Community facility nearby</td>
+        </tr>
+        <tr>
+          <td><strong>University (Closest)</strong></td>
+          <td>1,137 m</td>
+          <td>Supports residential letting demand</td>
+        </tr>
+        <tr>
+          <td><strong>Schools (Primary)</strong></td>
+          <td>~500–800 m</td>
+          <td>Multiple schools within walking distance</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">Nearest Amenities Summary</h3>
+    <p class="prose">
+      Property is in an excellent location for accessing public services and amenities. Police station (51m), fire station (382m), and GP (346m) provide rapid emergency response. Post office (106m) and swimming pool (295m) are within easy walking distance. Ipswich University (1,137m) is accessible by short bus ride or 15-minute walk, supporting residential lettings to students. Multiple primary schools within 500–800m support family-oriented lettings. Overall, the property benefits from good proximity to public services, which is typical for a town centre location.
+    </p>
+  </div>
+</div>
+
+<!-- === DATA SOURCES === -->
+<div class="page">
+  <div class="section reveal">
+    <h2 id="data-sources" class="section-title">Data Sources & Methodology</h2>
+
+    <p class="prose" style="margin-bottom: 30px;">
+      This analysis was compiled from the following structured data inputs. Hover over any <span class="source-icon" style="cursor: default;">i</span> icon throughout the report to see section-specific sourcing notes.
+    </p>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 1</span>
+        <div class="card-title" style="margin: 0;">Commercial Listing (LoopNet)</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: LoopNet UK — 41-43 Westgate Street listing &bull; Format: Web listing + photographs</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Guide price (£320k + VAT), floor areas (4,331 sq ft), tenure (freehold), previous tenant (Trespass), agent details, 2x photographs.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Cover, Executive Summary, Property Report, Agent Contacts
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 2</span>
+        <div class="card-title" style="margin: 0;">UPRN Property Intelligence</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: SmartSource UPRN API — UPRN 100091483265 &bull; Format: JSON</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Building dimensions, construction details (1948, brick/tile, 31% flat roof), environmental indices (flood 0%, radon Class 1, subsidence projections), EPC data (B, score 28, CO₂ 9.25), market intelligence (avg days to sell/rent, nearby sales, YoY change, HHI), crime stats (6 categories), traffic data, facilities distances, ownership.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> All sections — primary data backbone
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 3</span>
+        <div class="card-title" style="margin: 0;">Energy Performance Certificate (EPC)</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: EPC Register / MHCLG (via UPRN data) &bull; Format: Structured fields</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Rating B (score 28), inspection 19 Sep 2025, CO₂ 9.25 vs target 3.61, heating type, 6 improvement recommendations, MEES status.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Executive Summary, Section 2.0 (Condition), Section 3.0 (EPC table), SWOT
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 4</span>
+        <div class="card-title" style="margin: 0;">HM Land Registry Price Paid Data</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: HM Land Registry — Category B (commercial) &bull; Format: CSV — 820 rows (462 IP1, 358 N15)</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> All freehold commercial sales in IP1 3xx (2016–2025). 6 Westgate Street comps, 4 wider Ipswich. Filtered to Category B, freehold only.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Section 4.0 (Sales Comparables + charts), Valuation cross-check
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 5</span>
+        <div class="card-title" style="margin: 0;">Rental Comparables (LoopNet PDFs)</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: LoopNet UK &bull; Format: PDF screenshots (12 Ipswich + 23 Waltham Forest listings)</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Address, postcode, sq ft, asking rent pa, £/sqft for 35 listings (12 Ipswich + 23 Waltham Forest). Key comp: 7 Westgate St (£16.62/sqft). WF median: £30.78/sqft.<br>
+        <strong style="color: var(--text-main);">Caveat:</strong> All asking rents — achieved rents typically 5–15% lower. £15/sqft adopted for subject reflects this discount.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Section 4.0 (Rental tables + charts), Section 5.0 (Market Rent derivation). Haringey (Tier 2) replaced by Waltham Forest (Tier 1) for stronger benchmark.
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 6</span>
+        <div class="card-title" style="margin: 0;">ONS MSOA Comparable Analysis</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: SmartSource ONS API &bull; Format: JSON — MSOA similarity scoring</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Subject: Ipswich 007. Tier 1: Waltham Forest 025 (primary benchmark). Tier 2: Haringey 027, Milton Keynes 008, Lambeth 006/022. Census 2021 demographics.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Section 4.0 (Demographics), Waltham Forest rental benchmarking (upgraded from Haringey Tier 2)
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span class="badge badge-info">INPUT 7</span>
+        <div class="card-title" style="margin: 0;">Property Photographs (Image Analysis)</div>
+      </div>
+      <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-family: monospace; background: #0d0d0f; padding: 8px 12px; border-radius: 4px;">Source: LoopNet CDN &bull; Format: JPEG — 2 images</div>
+      <div style="font-size: 13px; color: #aaa; line-height: 1.7;">
+        <strong style="color: var(--text-main);">Extracted:</strong> Visual confirmation of 3-storey construction, double frontage, flat roof area, general external condition, signage removal evidence, fenestration, neighbouring uses.<br>
+        <strong style="color: var(--text-main);">Used in:</strong> Section 2.0 (photo grid, condition narrative)
+      </div>
+    </div>
+
+    <div class="card" style="border-left: 3px solid var(--cyan); margin-top: 20px;">
+      <div class="card-title" style="color: var(--cyan);">Methodology Note</div>
+      <p style="font-size: 13px; color: #aaa; margin: 0; line-height: 1.7;">
+        All numerical outputs (ERV, ARY, Market Value, As-Is Value) were calculated programmatically from the inputs above. Valuation method: Income Approach (MR ÷ ARY = MV). As-is adjustments are analyst estimates, not surveyor-verified. No physical inspection was conducted. All conclusions are AI-generated and should be validated by a qualified professional before any decision.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- === INVESTMENT VERDICT === -->
+<div class="page">
+  <div class="section reveal">
+    <h2 class="section-title">Investment Verdict</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+      <div class="card" style="border-left: 3px solid var(--success);">
+        <div class="card-title" style="color: var(--success);">Key Strengths</div>
+        <div style="font-size: 13px; color: #aaa; line-height: 1.8;">
+          <strong style="color: var(--text-main);">1. Freehold on a prominent arterial street</strong> — double-fronted, 2,793 vehicles/day. Full control, no ground rent.<br><br>
+          <strong style="color: var(--text-main);">2. Clear value-add angle</strong> — upper floors (2,887 sq ft) unused. Residential conversion to 2–3 flats is a realistic path to enhanced returns.<br><br>
+          <strong style="color: var(--text-main);">3. EPC B, MEES compliant</strong> — no regulatory cliff-edge on reletting. Increasingly rare for period retail.
+        </div>
+      </div>
+      <div class="card" style="border-left: 3px solid var(--danger);">
+        <div class="card-title" style="color: var(--danger);">Key Risks</div>
+        <div style="font-size: 13px; color: #aaa; line-height: 1.8;">
+          <strong style="color: var(--text-main);">1. Vacant with no tenant pipeline</strong> — immediate void carry (£3k/month), no certainty of letting. Sales down 21% YoY locally.<br><br>
+          <strong style="color: var(--text-main);">2. Poor condition, immediate CapEx</strong> — £40–60k minimum. 31% flat roof is the primary liability. Dead money if letting fails.<br><br>
+          <strong style="color: var(--text-main);">3. Weak exit liquidity</strong> — Tavern St evidence (£1.4M → £500k in 4 years). Without income, exit options are severely limited.
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Suitability</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50%;">Suitable For</th>
+          <th style="width: 50%;">Not Suitable For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Experienced value-add investors with CapEx budget and letting capability</td>
+          <td>Income-seeking investors requiring immediate yield</td>
+        </tr>
+        <tr>
+          <td>Developer-investors targeting mixed-use conversion (retail + residential)</td>
+          <td>Passive investors without property management resource</td>
+        </tr>
+        <tr>
+          <td>Local owner-occupiers seeking premises below replacement cost</td>
+          <td>Conventional mortgage lenders or pension funds</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.1), rgba(0, 184, 230, 0.1)); border: 1px solid rgba(173, 43, 238, 0.3); margin-top: 30px;">
+      <p style="font-size: 15px; color: var(--text-main); margin: 0; line-height: 1.7; font-weight: 500; text-align: center;">
+        A higher-risk repositioning opportunity suited to experienced investors with a clear asset management plan. At the right price (£250k–£270k), the freehold tenure and conversion potential provide a credible path to value creation — but execution risk is significant, and the buyer must be prepared to carry the asset through an extended void.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- === PAGE 13: FOOTER === -->
+<div class="footer">
+  <div class="footer-content">
+    <div class="footer-divider"></div>
+    <p>
+      <strong>41–43 Westgate Street, Ipswich IP1 3DX</strong><br>
+      AI-Assisted Investment Analysis Report
+    </p>
+    <p style="margin-top: 15px; font-size: 11px; opacity: 0.8;">
+      This report has been prepared by SmartSource as an AI-assisted investment analysis tool. It is not a formal RICS Red Book valuation and has not been signed by a registered valuer. The analysis is aligned to UK lender valuation principles and is intended for investment decision support only. Professional advice should be sought before any lending or purchase decision.
+    </p>
+    <p style="margin-top: 15px; font-size: 11px; opacity: 0.8;">
+      © 2026 SmartSource. All rights reserved. This report is confidential and prepared for the sole use of the named recipient. Reproduction or distribution without prior written consent is prohibited.
+    </p>
+    <p style="margin-top: 20px; font-size: 10px; opacity: 0.7;">
+      Valuation Date: 14 April 2026 | Report Generated: April 2026
+    </p>
+  </div>
+</div>
+
+  </main>
+</div>
+<script>
+// === INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ===
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Don't unobserve — keeps it visible
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .chart-container').forEach(el => {
+    observer.observe(el);
+  });
+
+  // === ANIMATED COUNTERS ON KPI CARDS ===
+  const kpiObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        const valueEl = entry.target.querySelector('.kpi-value, .cover-meta-value');
+        if (!valueEl) return;
+        const text = valueEl.textContent.trim();
+        const match = text.match(/[£]?([\d,]+)/);
+        if (!match) return;
+        const target = parseInt(match[1].replace(/,/g, ''));
+        if (isNaN(target) || target === 0) return;
+        const prefix = text.startsWith('£') ? '£' : '';
+        const suffix = text.replace(/[£\d,]+/, '');
+        const duration = 1200;
+        const start = performance.now();
+        const animate = (now) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(target * eased);
+          valueEl.innerHTML = prefix + current.toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        valueEl.innerHTML = prefix + '0' + suffix;
+        requestAnimationFrame(animate);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.kpi-card, .cover-meta-item').forEach(el => {
+    kpiObserver.observe(el);
+  });
+
+  // === SIDEBAR ACTIVE STATE ON SCROLL ===
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === '#' + id) {
+            document.querySelectorAll('.nav-menu li').forEach(li => li.classList.remove('active'));
+            link.querySelector('li').classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => { if (s.id) sectionObserver.observe(s); });
+});
+</script>
+</body>
+</html>
