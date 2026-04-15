@@ -47,7 +47,7 @@
     .dashboard-layout {
       display: flex;
       min-height: 100vh;
-      width: 100vw;
+      width: 100%;
     }
 
     .sidebar {
@@ -94,6 +94,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     /* === SIDEBAR === */
@@ -1027,7 +1028,10 @@
     @media (max-width: 1024px) {
       .sidebar { width: 220px; }
       .content-area { margin-left: 220px; }
+      .content-area::before { left: 220px; }
       .page { padding: 30px 28px; }
+      .cover-page { padding: 40px 30px; }
+      .cover-title { font-size: 42px; }
       .top-nav { padding: 20px 28px; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
       .cover-meta { grid-template-columns: repeat(2, 1fr); }
@@ -1058,17 +1062,21 @@
         box-shadow: 4px 0 30px rgba(0,0,0,0.5);
       }
       .sidebar.open { transform: translateX(0); }
-      .content-area { margin-left: 0; }
+      .content-area { margin-left: 0; width: 100%; min-width: 0; }
+      .content-area::before { left: 0; }
 
       /* Ambient glow orbs smaller on mobile */
       .dashboard-layout::before { width: 300px; height: 300px; top: -100px; right: -80px; }
       .dashboard-layout::after { width: 400px; height: 400px; left: -100px; bottom: -200px; }
 
       .page { padding: 24px 16px; }
+      .cover-page { padding: 30px 16px; }
+      .cover-title { font-size: 32px; }
       .top-nav { padding: 18px 16px 18px 64px; flex-wrap: wrap; gap: 10px; }
       .top-nav-tabs { gap: 12px; flex-wrap: wrap; }
       .tab-title { font-size: 14px; margin-right: 8px; }
       .tab { font-size: 10px; }
+      .search-bar input { width: 100px; }
 
       /* KPIs & meta grids full width */
       .kpi-grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 28px; }
@@ -1090,8 +1098,13 @@
       table {
         display: block;
         overflow-x: auto;
-        white-space: nowrap;
         -webkit-overflow-scrolling: touch;
+      }
+      th, td {
+        white-space: nowrap;
+      }
+      .card table td, .card table th {
+        white-space: normal;
       }
       th, td { padding: 10px 12px; font-size: 12px; }
 
@@ -1127,6 +1140,8 @@
     /* ---------- SMALL MOBILE (≤480px) ---------- */
     @media (max-width: 480px) {
       .page { padding: 20px 14px; }
+      .cover-page { padding: 20px 14px; }
+      .cover-title { font-size: 28px; }
       .section-title { font-size: 17px; }
       .kpi-value { font-size: 20px; }
       .cover-meta-value { font-size: 22px; }
