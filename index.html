@@ -1062,7 +1062,7 @@
         box-shadow: 4px 0 30px rgba(0,0,0,0.5);
       }
       .sidebar.open { transform: translateX(0); }
-      .content-area { margin-left: 0; width: 100%; min-width: 0; }
+      .content-area { margin-left: 0; width: 100%; min-width: 0; padding-top: 50px; }
       .content-area::before { left: 0; }
 
       /* Ambient glow orbs smaller on mobile */
@@ -1072,41 +1072,70 @@
       .page { padding: 24px 16px; }
       .cover-page { padding: 30px 16px; }
       .cover-title { font-size: 32px; }
-      .top-nav { padding: 18px 16px 18px 64px; flex-wrap: wrap; gap: 10px; }
-      .top-nav-tabs { gap: 12px; flex-wrap: wrap; }
-      .tab-title { font-size: 14px; margin-right: 8px; }
-      .tab { font-size: 10px; }
-      .search-bar input { width: 100px; }
+      .top-nav { display: none !important; }
 
       /* KPIs & meta grids full width */
-      .kpi-grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 28px; }
-      .kpi-card { padding: 20px; }
-      .kpi-value { font-size: 22px; }
+      .kpi-grid { grid-template-columns: 1fr; gap: 16px; margin-bottom: 30px; }
+      .kpi-card { padding: 24px 20px; border-radius: 12px; }
+      .kpi-value { font-size: 26px; }
 
-      .cover-meta { grid-template-columns: 1fr; gap: 14px; }
-      .cover-meta-item { padding: 20px; }
-      .cover-meta-value { font-size: 24px; }
+      .cover-meta { grid-template-columns: 1fr; gap: 16px; }
+      .cover-meta-item { padding: 24px 20px; border-radius: 12px; }
+      .cover-meta-value { font-size: 28px; }
 
-      .section-title { font-size: 18px; margin-bottom: 18px; }
-      .subsection-title { font-size: 15px; margin-top: 28px; }
+      .section-title { font-size: 22px; margin-bottom: 20px; }
+      .subsection-title { font-size: 16px; margin-top: 28px; }
 
-      /* Cards compact */
-      .card { padding: 18px; }
-      .risk-card { padding: 16px; }
+      /* Cards bold */
+      .card { padding: 24px; border-radius: 12px; }
+      .risk-card { padding: 20px; }
+      .mini-chart-card { padding: 24px; border-radius: 12px; }
 
-      /* Tables: horizontal scroll rather than squish */
+      /* Tables: Stacked Flow for mobile */
       table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        display: block !important;
+        overflow: hidden !important; 
+        width: 100%;
+        border: none;
       }
-      th, td {
-        white-space: nowrap;
+      thead { display: none; }
+      tbody, tr, th, td { display: block; width: 100%; }
+      table:not(.card table) tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--bg-card);
+        padding: 4px 16px 8px 16px;
       }
-      .card table td, .card table th {
-        white-space: normal;
+      table:not(.card table) td, table:not(.card table) th {
+        white-space: normal !important;
+        border: none !important;
+        padding: 8px 0 0 0 !important;
+        text-align: left;
       }
-      th, td { padding: 10px 12px; font-size: 12px; }
+      table:not(.card table) td:nth-child(odd) {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.03) !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 6px;
+      }
+      table:not(.card table) td:nth-child(even) {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--text-main);
+      }
+      table:not(.card table) td:last-child {
+        margin-bottom: 0;
+      }
+      .card table tr {
+        margin: 0; padding: 0; background: transparent; border: none; display: flex; flex-direction: column; 
+      }
+      .card table td {
+        padding: 6px 0 !important; border: none !important; margin: 0 !important; text-align: left; background: transparent !important; white-space: normal;
+      }
 
       /* SVG charts: scale to container */
       svg[viewBox] { max-width: 100%; height: auto; }
