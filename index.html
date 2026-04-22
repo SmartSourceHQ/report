@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
   <title>41-43 Westgate Street - Investment Analysis Report</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
 
     * {
@@ -1177,9 +1178,958 @@
       .photo-item img { height: 180px; }
       th, td { padding: 8px 10px; font-size: 11px; }
     }
+
+    /* ================================================================
+       INSTITUTIONAL RESTYLE — Premium investor/finance aesthetic
+       Deep navy canvas, warm gold accents, editorial serif headlines.
+       Overrides the prior cyan/purple theme.
+       ================================================================ */
+    :root {
+      --bg-dark:       #0b1220;
+      --bg-panel:      #0e1626;
+      --bg-sidebar:    #070d1a;
+      --bg-card:       #121c2e;
+      --border-color:  rgba(255, 255, 255, 0.07);
+      --hairline-gold: rgba(201, 164, 92, 0.35);
+
+      --gold:          #C9A45C;
+      --gold-soft:     #D9B978;
+      --gold-dim:      rgba(201, 164, 92, 0.18);
+      --primary-gradient: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 100%);
+      --cyan:          var(--gold);
+      --cyan-dim:      var(--gold-dim);
+      --purple:        var(--gold);
+
+      --text-main:     #ECE4D2;
+      --text-muted:    #8A8374;
+      --text-faint:    rgba(236, 228, 210, 0.55);
+
+      --success:       #4F9C78;
+      --warning:       #C69A4A;
+      --danger:        #B8564A;
+      --info:          #7C99C0;
+
+      --font-serif:    'Playfair Display', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --font-sans:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); }
+
+    /* Remove ambient glow orbs + dot grid + perspective grid + arc rings */
+    .dashboard-layout::before,
+    .dashboard-layout::after,
+    .content-area::before,
+    .cover-page::before,
+    .cover-page::after { content: none !important; display: none !important; background: none !important; }
+
+    .cover-page {
+      background: var(--bg-panel) !important;
+      border-bottom: 1px solid var(--hairline-gold) !important;
+      padding: 60px 48px 48px !important;
+    }
+
+    /* Respect accessibility preference: disable scroll-reveal motion */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-scale { opacity: 1 !important; transform: none !important; }
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      background: var(--bg-sidebar) !important;
+      border-right: 1px solid var(--border-color) !important;
+    }
+    .sidebar-header {
+      padding: 32px 24px 24px !important;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .sidebar-brand { color: var(--text-main); }
+    .sidebar-brand .ss-logo { height: 34px; width: auto; display: block; color: var(--text-main); }
+    .sidebar-brand img {
+      max-width: 200px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .premium-tier {
+      color: var(--gold) !important;
+      font-size: 10px !important;
+      letter-spacing: 2.5px !important;
+      font-weight: 600 !important;
+      margin-top: 12px !important;
+    }
+    .nav-menu { padding: 22px 14px !important; }
+    .nav-menu li {
+      border-radius: 0 !important;
+      padding: 13px 16px !important;
+      color: var(--text-faint) !important;
+      font-size: 12.5px !important;
+      letter-spacing: 0.3px !important;
+      border-left: 2px solid transparent !important;
+      transition: color 0.2s, background 0.2s, border-color 0.2s !important;
+    }
+    .nav-menu li:hover {
+      color: var(--text-main) !important;
+      background: rgba(255,255,255,0.025) !important;
+    }
+    .nav-menu li.active {
+      background: rgba(201, 164, 92, 0.08) !important;
+      color: var(--gold) !important;
+      border-left: 2px solid var(--gold) !important;
+    }
+    .nav-menu li.active svg { color: var(--gold) !important; opacity: 1 !important; }
+    .nav-menu li svg { color: var(--text-muted); opacity: 0.85; }
+
+    /* ---------- TOP NAV ---------- */
+    .top-nav {
+      background: rgba(11, 18, 32, 0.88) !important;
+      border-bottom: 1px solid var(--hairline-gold) !important;
+      padding: 18px 48px !important;
+    }
+    .top-nav-tabs { gap: 22px !important; }
+    .tab-title {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 18px !important;
+      color: var(--text-main) !important;
+      letter-spacing: 0.3px !important;
+      margin-right: 18px !important;
+    }
+    .tab {
+      color: var(--text-muted) !important;
+      font-size: 10.5px !important;
+      letter-spacing: 2px !important;
+      padding-bottom: 6px !important;
+      border-bottom: 1px solid transparent !important;
+    }
+    .tab:hover { color: var(--text-main) !important; }
+    .tab.active {
+      color: var(--gold) !important;
+      border-bottom: 1px solid var(--gold) !important;
+      border-image: none !important;
+    }
+    .top-nav-actions { gap: 22px !important; }
+    .top-nav-actions .icon { color: var(--text-muted); }
+    .top-nav-actions .icon:hover { color: var(--gold); }
+
+    /* Replace the cyan search pill visual with a bordered editorial search */
+    .search-bar {
+      background: transparent !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 0 !important;
+      padding: 8px 14px !important;
+    }
+    .search-bar input {
+      font-size: 10.5px !important;
+      letter-spacing: 1.5px !important;
+      text-transform: uppercase;
+      color: var(--text-muted) !important;
+    }
+    .search-bar input::placeholder { color: var(--text-muted) !important; }
+
+    /* Gold download CTA button */
+    .cta-gold {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cta-gold:hover { background: var(--gold); color: var(--bg-dark); }
+
+    /* Breadcrumb above hero */
+    .breadcrumb {
+      padding: 22px 48px 0;
+      font-size: 10.5px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .breadcrumb .sep { margin: 0 10px; color: var(--gold); opacity: 0.6; }
+    .breadcrumb .here { color: var(--text-main); }
+
+    /* ---------- HERO ---------- */
+    .live-market-badge {
+      background: transparent !important;
+      border: none !important;
+      border-left: 2px solid var(--gold) !important;
+      border-radius: 0 !important;
+      padding: 4px 0 4px 12px !important;
+      color: var(--gold) !important;
+      letter-spacing: 2.5px !important;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      margin-bottom: 26px !important;
+    }
+    .live-market-badge .indicator {
+      background: var(--gold) !important;
+      box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.18) !important;
+      width: 6px !important; height: 6px !important;
+    }
+
+    .cover-title {
+      font-family: var(--font-serif) !important;
+      font-size: 58px !important;
+      font-weight: 500 !important;
+      letter-spacing: -0.5px !important;
+      line-height: 1.08 !important;
+      color: var(--text-main) !important;
+      margin-bottom: 18px !important;
+    }
+    .gradient-text {
+      background: none !important;
+      background-clip: initial !important;
+      -webkit-background-clip: initial !important;
+      -webkit-text-fill-color: var(--gold) !important;
+      color: var(--gold) !important;
+      font-style: italic;
+    }
+    .hero-subtitle {
+      color: var(--text-faint) !important;
+      font-size: 15px !important;
+      line-height: 1.7 !important;
+      max-width: 640px !important;
+      margin-bottom: 44px !important;
+    }
+    .hero-subtitle strong { color: var(--text-main); font-weight: 500; }
+
+    .cover-meta { gap: 0 !important; grid-template-columns: repeat(4, 1fr) !important; border-top: 1px solid var(--hairline-gold); }
+    .cover-meta-item {
+      background: transparent !important;
+      border: none !important;
+      border-right: 1px solid var(--border-color) !important;
+      border-radius: 0 !important;
+      padding: 26px 28px !important;
+      position: relative;
+    }
+    .cover-meta-item:last-child { border-right: none !important; }
+    .cover-meta-item::after,
+    .cover-meta-item:nth-child(1)::after,
+    .cover-meta-item:nth-child(2)::after,
+    .cover-meta-item:nth-child(3)::after,
+    .cover-meta-item:nth-child(4)::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important; left: 0 !important;
+      bottom: auto !important;
+      width: 40px !important; height: 2px !important;
+      background: var(--gold) !important;
+    }
+    .cover-meta-label {
+      color: var(--text-muted) !important;
+      font-size: 10px !important;
+      letter-spacing: 2px !important;
+      margin-bottom: 14px !important;
+    }
+    .cover-meta-value {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 30px !important;
+      color: var(--text-main) !important;
+    }
+    .cover-meta-sub { color: var(--gold) !important; font-weight: 500 !important; font-size: 11px !important; }
+
+    /* Optional hero photo strip */
+    .hero-photos {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+      margin-top: 44px;
+    }
+    .hero-photos .photo-primary,
+    .hero-photos .photo-secondary {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--border-color);
+      min-height: 220px;
+    }
+    .hero-photos img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; display: block; }
+    .hero-photos .photo-primary { min-height: 360px; }
+    .hero-photos .photo-secondary { display: grid; grid-template-rows: 1fr 1fr; gap: 12px; border: none; min-height: 360px; }
+    .hero-photos .photo-secondary > div {
+      position: relative; overflow: hidden; background: #000;
+      border: 1px solid var(--border-color);
+    }
+    .hero-photo-caption {
+      position: absolute; left: 18px; bottom: 18px; right: 18px;
+      z-index: 2; color: var(--gold);
+      font-family: var(--font-serif);
+      font-size: 18px; font-weight: 500;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.9);
+    }
+    .hero-photo-caption .sub {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-main); margin-top: 4px; font-weight: 500;
+    }
+    @media (max-width: 1024px) {
+      .hero-photos { grid-template-columns: 1fr; }
+      .hero-photos .photo-secondary { grid-template-rows: auto auto; min-height: auto; }
+    }
+
+    /* ---------- PAGE ---------- */
+    .page { padding: 56px 48px !important; border-bottom: 1px solid var(--border-color) !important; }
+    .section-title {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 32px !important;
+      letter-spacing: -0.3px !important;
+      color: var(--text-main) !important;
+      margin-bottom: 32px !important;
+      padding-bottom: 14px !important;
+      border-bottom: 1px solid var(--hairline-gold) !important;
+      position: relative;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -1px;
+      width: 60px; height: 2px;
+      background: var(--gold);
+    }
+    .subsection-title {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 20px !important;
+      color: var(--text-main) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    /* ---------- CARDS / KPIs ---------- */
+    .card, .kpi-card, .mini-chart-card, .chart-container {
+      background: var(--bg-card) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 2px !important;
+      box-shadow: none !important;
+      position: relative;
+    }
+    .card:hover, .kpi-card:hover, .cover-meta-item:hover, .mini-chart-card:hover {
+      transform: none !important;
+      box-shadow: none !important;
+      border-color: var(--hairline-gold) !important;
+    }
+    .kpi-card::after, .mini-chart-card::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important; left: 0 !important;
+      bottom: auto !important; right: auto !important;
+      width: 40px !important; height: 2px !important;
+      background: var(--gold) !important;
+      opacity: 1 !important;
+    }
+    .kpi-card { padding: 28px 26px !important; }
+    .kpi-label, .mini-chart-label {
+      color: var(--text-muted) !important;
+      letter-spacing: 2px !important;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+    }
+    .kpi-value {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 30px !important;
+      color: var(--text-main) !important;
+      -webkit-text-fill-color: var(--text-main) !important;
+      background: none !important;
+    }
+    .kpi-unit { color: var(--gold) !important; font-weight: 500 !important; font-size: 11px !important; margin-top: 6px !important; }
+    .card-title {
+      font-family: var(--font-serif) !important;
+      font-weight: 500 !important;
+      font-size: 18px !important;
+      color: var(--text-main) !important;
+      margin-bottom: 14px !important;
+      padding-bottom: 10px !important;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ---------- TABLES ---------- */
+    table { border-collapse: collapse !important; }
+    th {
+      color: var(--gold) !important;
+      border-bottom: 1px solid var(--hairline-gold) !important;
+      letter-spacing: 2px !important;
+      font-size: 10px !important;
+      padding: 14px 16px !important;
+      background: transparent !important;
+      font-weight: 600 !important;
+    }
+    td {
+      padding: 14px 16px !important;
+      border-bottom: 1px solid var(--border-color) !important;
+      color: var(--text-main) !important;
+      font-size: 13px !important;
+    }
+    tr:hover td { background-color: rgba(201, 164, 92, 0.04) !important; }
+    .table-accent {
+      background: rgba(201, 164, 92, 0.05) !important;
+      border-left: 2px solid var(--gold) !important;
+    }
+
+    /* ---------- BADGES ---------- */
+    .badge {
+      border-radius: 0 !important;
+      padding: 4px 10px !important;
+      font-size: 9.5px !important;
+      letter-spacing: 2px !important;
+      font-weight: 600 !important;
+      border-width: 1px !important;
+    }
+    .badge-success { background: rgba(79, 156, 120, 0.12) !important; color: var(--success) !important; border-color: rgba(79, 156, 120, 0.5) !important; }
+    .badge-warning { background: rgba(198, 154, 74, 0.12) !important; color: var(--warning) !important; border-color: rgba(198, 154, 74, 0.5) !important; }
+    .badge-danger  { background: rgba(184, 86, 74, 0.10) !important; color: var(--danger) !important;  border-color: rgba(184, 86, 74, 0.5) !important; }
+    .badge-info    { background: rgba(124, 153, 192, 0.10) !important; color: var(--info) !important;   border-color: rgba(124, 153, 192, 0.4) !important; }
+
+    /* ---------- RISK CARDS ---------- */
+    .risk-card { background: var(--bg-card) !important; border-radius: 2px !important; border-left-width: 2px !important; }
+    .risk-low { border-left-color: var(--gold) !important; }
+    .risk-title { font-family: var(--font-serif) !important; font-weight: 500 !important; font-size: 16px !important; color: var(--text-main) !important; }
+    .risk-desc { color: var(--text-faint) !important; }
+
+    /* ---------- PROSE / HIGHLIGHTS ---------- */
+    .prose { color: var(--text-faint) !important; }
+    .prose strong { color: var(--text-main) !important; }
+    .highlight {
+      background: rgba(201, 164, 92, 0.12) !important;
+      color: var(--gold) !important;
+      border-radius: 0 !important;
+    }
+    .action-list li:before { color: var(--gold) !important; }
+
+    /* ---------- PHOTOS ---------- */
+    .photo-item { border-radius: 2px !important; }
+    .photo-caption { background: var(--bg-card) !important; color: var(--text-muted) !important; border-top: 1px solid var(--hairline-gold); letter-spacing: 1.5px; text-transform: uppercase; font-size: 10.5px !important; }
+
+    /* ---------- FOOTER ---------- */
+    .footer { color: var(--text-muted); letter-spacing: 2px; font-size: 10px; text-transform: uppercase; border-top: 1px solid var(--hairline-gold); }
+
+    /* ---------- CHART SVG OVERRIDES ---------- */
+    svg line { stroke: rgba(255, 255, 255, 0.08) !important; }
+    svg text { fill: var(--text-muted) !important; }
+    .draw-line, svg polyline { stroke: var(--gold) !important; }
+    .gauge-fill { stroke: var(--gold) !important; }
+    .source-icon {
+      background: rgba(201, 164, 92, 0.15) !important;
+      color: var(--gold) !important;
+    }
+
+    /* Hide per-page print logo row on screen is already done; re-theme for print */
+    .cover-header, .header { display: none; }
+
+    /* Unified page-logo for print output (when .header is shown in print media) */
+    .page-logo { height: 22px; width: auto; color: var(--text-main); }
+
+    /* Remove cyan-tinted ambient glows from pulseGlow animation */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201, 164, 92, 0.2); }
+      50% { box-shadow: 0 0 16px 3px rgba(201, 164, 92, 0.12); }
+    }
+
+    /* Small-screen polish */
+    @media (max-width: 1024px) {
+      .top-nav, .breadcrumb { padding-left: 28px !important; padding-right: 28px !important; }
+      .cover-page { padding: 40px 28px !important; }
+      .page { padding: 40px 28px !important; }
+      .cover-title { font-size: 40px !important; }
+      .section-title { font-size: 26px !important; }
+    }
+    @media (max-width: 768px) {
+      .cover-title { font-size: 32px !important; }
+      .section-title { font-size: 22px !important; }
+      .cover-meta { grid-template-columns: 1fr !important; }
+      .cover-meta-item { border-right: none !important; border-bottom: 1px solid var(--border-color) !important; }
+    }
+
+    /* ================================================================
+       LIGHT THEME — Executive Summary and all content pages below.
+       Re-scopes CSS vars inside .page, so cards/tables/prose cascade.
+       Sidebar, top nav, breadcrumb and hero remain dark for contrast.
+       ================================================================ */
+    .page {
+      --bg-dark:       #FFFFFF;
+      --bg-panel:      #FFFFFF;
+      --bg-sidebar:    #FFFFFF;
+      --bg-card:       #FFFFFF;
+      --border-color:  rgba(24, 32, 52, 0.10);
+      --hairline-gold: rgba(168, 133, 64, 0.55);
+
+      --gold:          #A88540;
+      --gold-soft:     #C9A45C;
+      --gold-dim:      rgba(168, 133, 64, 0.12);
+
+      --text-main:     #16203A;
+      --text-muted:    #6A6A68;
+      --text-faint:    rgba(22, 32, 58, 0.68);
+
+      --success:       #3F7E5E;
+      --warning:       #A67B2E;
+      --danger:        #94332B;
+      --info:          #4A6A95;
+
+      background: var(--bg-dark) !important;
+      color: var(--text-main) !important;
+      border-bottom: 1px solid rgba(24, 32, 52, 0.08) !important;
+    }
+
+    /* On white, give cards a hairline border + very soft shadow so they pop */
+    .page .card,
+    .page .kpi-card,
+    .page .mini-chart-card,
+    .page .chart-container,
+    .page .risk-card,
+    .page .photo-item {
+      border-color: rgba(24, 32, 52, 0.10) !important;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+    }
+    /* Alternate subtle stripes so adjacent white cards don't blur together */
+    .page .kpi-card,
+    .page .mini-chart-card { background: #FCFBF7 !important; }
+
+    /* Section titles and headings */
+    .page .section-title,
+    .page .subsection-title,
+    .page .card-title,
+    .page .kpi-value,
+    .page .risk-title {
+      color: var(--text-main) !important;
+      -webkit-text-fill-color: var(--text-main) !important;
+    }
+    .page .section-title { border-bottom-color: var(--hairline-gold) !important; }
+    .page .subsection-title { border-bottom-color: var(--border-color) !important; }
+
+    /* Cards */
+    .page .card,
+    .page .kpi-card,
+    .page .mini-chart-card,
+    .page .chart-container,
+    .page .risk-card,
+    .page .photo-item {
+      background: var(--bg-card) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-main) !important;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03) !important;
+    }
+    .page .card:hover,
+    .page .kpi-card:hover,
+    .page .mini-chart-card:hover { border-color: var(--hairline-gold) !important; }
+    .page .card-title { border-bottom-color: var(--border-color) !important; }
+
+    /* Prose & strong */
+    .page .prose { color: var(--text-faint) !important; }
+    .page .prose strong,
+    .page p strong,
+    .page td strong { color: var(--text-main) !important; }
+    .page .highlight {
+      background: rgba(168, 133, 64, 0.14) !important;
+      color: var(--gold) !important;
+    }
+
+    /* Tables */
+    .page th {
+      color: var(--gold) !important;
+      border-bottom-color: var(--hairline-gold) !important;
+    }
+    .page td {
+      color: var(--text-main) !important;
+      border-bottom-color: var(--border-color) !important;
+    }
+    .page tr:hover td { background-color: rgba(168, 133, 64, 0.05) !important; }
+    .page .swot-header { background: #F6F3EC !important; color: var(--text-main) !important; }
+
+    /* Badges — stronger borders on light bg */
+    .page .badge-success { background: rgba(63, 126, 94, 0.12) !important;  color: var(--success) !important; border-color: rgba(63, 126, 94, 0.45) !important; }
+    .page .badge-warning { background: rgba(166, 123, 46, 0.12) !important; color: var(--warning) !important; border-color: rgba(166, 123, 46, 0.45) !important; }
+    .page .badge-danger  { background: rgba(148, 51, 43, 0.10) !important;  color: var(--danger)  !important; border-color: rgba(148, 51, 43, 0.45) !important; }
+    .page .badge-info    { background: rgba(74, 106, 149, 0.10) !important; color: var(--info)    !important; border-color: rgba(74, 106, 149, 0.4) !important; }
+
+    /* Photo caption on light */
+    .page .photo-caption {
+      background: #F6F3EC !important;
+      color: var(--text-muted) !important;
+      border-top-color: var(--hairline-gold) !important;
+    }
+
+    /* SVG charts — soften axis / grid strokes on white bg (only old dark-mode values) */
+    .page svg line[stroke="#333"],
+    .page svg line[stroke="#222"],
+    .page svg line[stroke="#111"],
+    .page svg line[stroke="#444"],
+    .page svg line[stroke="#2a2a2a"] { stroke: rgba(22, 32, 58, 0.18) !important; }
+
+    /* Only rewrite SVG text that still uses old dark-theme fills; preserve intentional palette fills */
+    .page svg text[fill="#888"],
+    .page svg text[fill="#999"],
+    .page svg text[fill="#aaa"],
+    .page svg text[fill="#ccc"],
+    .page svg text[fill="#ddd"] { fill: var(--text-muted) !important; }
+    .page svg text[fill="#666"],
+    .page svg text[fill="#555"],
+    .page svg text[fill="#444"],
+    .page svg text[fill="#333"],
+    .page svg text[fill="#222"] { fill: var(--text-muted) !important; }
+    /* Remap legacy cyan/purple text fills that survived elsewhere */
+    .page svg text[fill="#00d4ff"],
+    .page svg text[fill="#00B8E6"] { fill: var(--gold) !important; }
+    .page svg text[fill="#c84dff"],
+    .page svg text[fill="#AD2BEE"] { fill: var(--info) !important; }
+    .page svg text[fill="#34d399"],
+    .page svg text[fill="#10b981"] { fill: var(--success) !important; }
+    .page svg text[fill="#ff6b6b"],
+    .page svg text[fill="#ef4444"] { fill: var(--danger) !important; }
+
+    /* Keep Section-title gold underline visible */
+    .page .section-title::after { background: var(--gold) !important; }
+
+    /* Override generic light-grey inline styles for readability on cream bg */
+    .page [style*="color: #aaa"],
+    .page [style*="color:#aaa"],
+    .page [style*="color: #999"],
+    .page [style*="color:#999"]  { color: var(--text-faint) !important; }
+    .page [style*="color: #888"],
+    .page [style*="color:#888"],
+    .page [style*="color: #777"],
+    .page [style*="color:#777"]  { color: var(--text-muted) !important; }
+    .page [style*="color: #666"],
+    .page [style*="color:#666"],
+    .page [style*="color: #555"],
+    .page [style*="color:#555"]  { color: var(--text-main) !important; opacity: 0.75; }
+
+    /* Dark code-style chips (e.g. source-meta lines) flip to light on cream */
+    .page [style*="background: #0d0d0f"],
+    .page [style*="background:#0d0d0f"],
+    .page [style*="background: #151515"],
+    .page [style*="background:#151515"],
+    .page [style*="background: #1a1a2e"],
+    .page [style*="background:#1a1a2e"] {
+      background: #2B2F3A !important;
+      color: #E4DCC8 !important;
+      border: 1px solid rgba(168, 133, 64, 0.3) !important;
+    }
+
+    /* Kill the large dark content-area tint so light pages show through */
+    .content-area { background: var(--bg-panel); }
+
+    /* Footer under pages */
+    .footer { background: #FFFFFF; color: var(--text-muted); border-top: 1px solid rgba(168, 133, 64, 0.25); }
+
+    /* ============================================================
+       PDF EXPORT — styles applied while html2pdf captures the DOM
+       Mirrors @media print so html2canvas sees the same clean layout.
+       ============================================================ */
+    body.exporting .sidebar,
+    body.exporting .sidebar-backdrop,
+    body.exporting .mobile-menu-toggle,
+    body.exporting .top-nav,
+    body.exporting .breadcrumb,
+    body.exporting .live-market-badge,
+    body.exporting .footer,
+    body.exporting .cta-gold,
+    body.exporting .search-bar {
+      display: none !important;
+    }
+    body.exporting {
+      background: #FFFFFF !important;
+    }
+    body.exporting .dashboard-layout {
+      display: block !important;
+      grid-template-columns: none !important;
+    }
+    body.exporting .content-area,
+    body.exporting main.content-area {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      background: #FFFFFF !important;
+    }
+    /* All scroll-reveal blocks must be visible during capture */
+    body.exporting .reveal,
+    body.exporting .reveal-left,
+    body.exporting .reveal-scale,
+    body.exporting .chart-container {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+    body.exporting .chart-container svg rect[data-animate] {
+      transform: none !important;
+    }
+
+    /* Loading overlay while html2pdf runs */
+    #pdf-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(12, 18, 32, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #pdf-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .pdf-overlay-card {
+      background: #FFFFFF;
+      color: #16203A;
+      padding: 28px 36px;
+      min-width: 280px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      border-top: 3px solid #A88540;
+      border-radius: 2px;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+    .pdf-overlay-spinner {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 14px;
+      border: 2px solid rgba(168, 133, 64, 0.25);
+      border-top-color: #A88540;
+      border-radius: 50%;
+      animation: pdfSpin 0.9s linear infinite;
+    }
+    .pdf-overlay-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+      margin-bottom: 4px;
+    }
+    .pdf-overlay-sub {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #6A6A68;
+    }
+    @keyframes pdfSpin { to { transform: rotate(360deg); } }
+
+    /* ============================================================
+       PRINT STYLESHEET — engineered for the Download Report button
+       ============================================================ */
+    @page {
+      size: A4;
+      margin: 14mm 14mm 16mm;
+    }
+    @page :first {
+      margin: 0;
+    }
+
+    @media print {
+      /* Keep the gold/navy/success palette in the printed output */
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      html, body {
+        background: #FFFFFF !important;
+        color: #16203A !important;
+        font-size: 10.5pt;
+        line-height: 1.5;
+      }
+
+      /* Strip app chrome that shouldn't appear in the report */
+      .sidebar,
+      .sidebar-backdrop,
+      .mobile-menu-toggle,
+      .top-nav,
+      .breadcrumb,
+      .live-market-badge,
+      .footer,
+      .cta-gold,
+      .search-bar {
+        display: none !important;
+      }
+
+      /* Collapse the dashboard layout so the report takes the full page width */
+      .dashboard-layout {
+        display: block !important;
+        grid-template-columns: none !important;
+      }
+      .content-area,
+      main.content-area {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFFFF !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      /* Cover / hero — let it occupy the full first page edge-to-edge */
+      .cover-page {
+        padding: 20mm 16mm !important;
+        background: #FFFFFF !important;
+        border-bottom: 1px solid rgba(168, 133, 64, 0.4) !important;
+        page-break-after: always;
+        break-after: page;
+      }
+      .cover-title {
+        font-size: 32pt !important;
+        line-height: 1.1 !important;
+        margin-bottom: 12pt !important;
+      }
+      .hero-subtitle {
+        font-size: 11pt !important;
+        margin-bottom: 16pt !important;
+      }
+      .hero-photos img { max-height: 70mm; object-fit: cover; }
+      .cover-meta {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 6mm !important;
+      }
+      .cover-meta-value { font-size: 18pt !important; }
+      .cover-meta-label { font-size: 8pt !important; letter-spacing: 1.5pt !important; }
+
+      /* One section per printed page — predictable, editorial pagination */
+      .page {
+        padding: 10mm 0 !important;
+        background: #FFFFFF !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-before: always;
+        break-before: page;
+        page-break-inside: auto;
+      }
+      .page:first-of-type {
+        page-break-before: auto;
+        break-before: auto;
+      }
+
+      /* Section internals: keep headings with their first block */
+      .section { padding: 0 !important; }
+      .section-title,
+      .subsection-title {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+      p, li { orphans: 3; widows: 3; }
+
+      /* Never split these blocks across pages if it can be helped */
+      .card,
+      .kpi-card,
+      .mini-chart-card,
+      .chart-container,
+      .risk-card,
+      .photo-item,
+      table,
+      tr,
+      .verdict-card,
+      .swot-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      /* Tables: ensure headers repeat on each page if a table spills */
+      table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+      thead { display: table-header-group; }
+      tfoot { display: table-footer-group; }
+      th, td {
+        padding: 6pt 8pt !important;
+        font-size: 9.5pt !important;
+      }
+
+      /* Charts — keep aspect ratio predictable in print */
+      .chart-container svg,
+      .page svg {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      .chart-container {
+        padding: 6mm !important;
+        margin-bottom: 6mm !important;
+        box-shadow: none !important;
+        border: 1px solid rgba(168, 133, 64, 0.25) !important;
+      }
+
+      /* Page headers inside each .page (logo + section label) */
+      .header {
+        border-bottom: 1px solid rgba(168, 133, 64, 0.35) !important;
+        margin-bottom: 6mm !important;
+        padding: 0 0 3mm 0 !important;
+      }
+      .logo-small { width: 12mm !important; height: 12mm !important; }
+      .brand-text { font-size: 11pt !important; }
+      .header-info { font-size: 9pt !important; }
+
+      /* Disable all scroll-reveal hiding so everything prints */
+      .reveal, .reveal-left, .reveal-scale,
+      .chart-container {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+      }
+      .chart-container svg rect[data-animate] {
+        transform: none !important;
+      }
+
+      /* Prevent oversize hero images from consuming a whole page */
+      .photo-item img,
+      .photo-grid img {
+        max-height: 70mm !important;
+        object-fit: cover !important;
+      }
+
+      /* Turn interactive links into plain text, but show URLs for external refs */
+      a, a:visited {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+      a[href^="http"]::after {
+        content: "";
+      }
+
+      /* Gold hairlines still print */
+      .section-title::after {
+        background: #A88540 !important;
+      }
+
+      /* Badges — ensure coloured backgrounds print */
+      .badge {
+        border: 1px solid currentColor !important;
+      }
+    }
   </style>
 </head>
 <body>
+<!-- SmartSource logo symbol — reusable via <use href="#ssLogo"/> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ssLogo" viewBox="0 0 280 56">
+      <!-- Solid rounded hexagon mark with chevron cut-out (evenodd) -->
+      <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M28 2 L46 12 Q48 13.2 48 15.8 L48 40.2 Q48 42.8 46 44 L28 54 L28 54 L10 44 Q8 42.8 8 40.2 L8 15.8 Q8 13.2 10 12 L28 2 Z M16 34 L28 16 L40 34 L34 34 L28 25 L22 34 Z"/>
+      <!-- Wordmark -->
+      <text x="64" y="40" font-family="Inter, -apple-system, sans-serif" font-size="32" font-weight="500" fill="currentColor" letter-spacing="-0.4">SmartSource<tspan fill="currentColor">.</tspan></text>
+    </symbol>
+  </defs>
+</svg>
 <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
 </button>
@@ -1188,9 +2138,9 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-brand">
-        <img src="SmartSource.png" alt="SmartSource.">
+        <img src="Logo.png" alt="SmartSource.">
       </div>
-      <div class="premium-tier" style="margin-top: 10px;">PREMIUM TIER</div>
+      <div class="premium-tier" style="margin-top: 14px;">Investment Intelligence</div>
     </div>
     <ul class="nav-menu">
       <a href="#property-report" style="color:inherit;text-decoration:none;">
@@ -1238,7 +2188,7 @@
   <main class="content-area">
     <div class="top-nav">
       <div class="top-nav-tabs">
-        <span class="tab-title">Architectural Lens</span>
+        <span class="tab-title">Ipswich Portfolio</span>
         <a href="#property-report" class="tab active" style="text-decoration:none;">PORTFOLIO</a>
         <a href="#comparables" class="tab" style="text-decoration:none;">TRENDS</a>
         <a href="#market-commentary" class="tab" style="text-decoration:none;">FORECASTS</a>
@@ -1246,12 +2196,12 @@
       <div class="top-nav-actions">
         <div class="search-bar">
           <svg fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <input type="text" placeholder="SEARCH MARKET...">
+          <input type="text" placeholder="Search market...">
         </div>
-        <svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
-        <svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        <a href="#" class="cta-gold" onclick="downloadReport(); return false;">Download Report</a>
       </div>
     </div>
+    <div class="breadcrumb">Reports <span class="sep">/</span> Ipswich Portfolio <span class="sep">/</span> <span class="here">41–43 Westgate Street</span></div>
 
     <div class="cover-page" id="hero">
       <div class="live-market-badge">
@@ -1262,6 +2212,19 @@
         <h1 class="cover-title">Property <span class="gradient-text">Valuation Report.</span></h1>
         <p class="hero-subtitle">AI-assisted investment analysis for <strong>41–43 Westgate Street, Ipswich IP1 3DX</strong>. Not a formal valuation — intended as a decision-support tool for investors and lenders.</p>
         
+        <div class="hero-photos">
+          <div class="photo-primary">
+            <img src="https://images.loopnet.co.uk/i2/M_1EKY9Dqjn4bKmJwCusbB9DmgImVahWiiUYM93NvNc/116/41-43-Westgate-St-Ipswich-Primary-Photo-1-LargeHighDefinition.jpg" alt="41–43 Westgate Street primary frontage">
+            <div class="hero-photo-caption">41–43 Westgate Street<span class="sub">Freehold Retail Asset — Ipswich IP1</span></div>
+          </div>
+          <div class="photo-secondary">
+            <div><img src="https://images.loopnet.co.uk/i2/VbvXmQ0yUKFDQ9PpZYFZ73t1wFna_HzWLrXVgr0dJro/116/41-43-Westgate-St-Ipswich-Building-Photo-2-LargeHighDefinition.jpg" alt="41–43 Westgate Street building"></div>
+            <div style="background:linear-gradient(135deg,#0e1626,#1a2540);display:flex;align-items:center;justify-content:center;">
+              <div style="text-align:center;color:var(--gold);font-family:var(--font-serif);font-size:16px;padding:24px;">Prime Secondary Pitch<br><span style="font-family:var(--font-sans);font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;">Value-Add Opportunity</span></div>
+            </div>
+          </div>
+        </div>
+
         <div class="cover-meta">
           <div class="cover-meta-item">
             <div class="cover-meta-label">GUIDE PRICE</div>
@@ -1269,7 +2232,7 @@
           </div>
           <div class="cover-meta-item">
             <div class="cover-meta-label">BUILT AREA</div>
-            <div class="cover-meta-value">4,331 <span style="font-size:14px;color:#888;">sq ft</span></div>
+            <div class="cover-meta-value">4,331 <span style="font-size:14px;color:var(--text-muted);">sq ft</span></div>
           </div>
           <div class="cover-meta-item">
             <div class="cover-meta-label">ESTIMATED ARY</div>
@@ -1508,8 +2471,8 @@
           <text x="180" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981" font-family="Inter">£327</text>
           <rect x="230" y="112" width="100" height="36" rx="4" fill="rgba(16, 185, 129, 0.25)"/>
           <text x="280" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981" font-family="Inter">£313</text>
-          <rect x="330" y="112" width="100" height="36" rx="4" fill="rgba(0, 184, 230, 0.3)" stroke="var(--cyan)" stroke-width="2"/>
-          <text x="380" y="135" text-anchor="middle" font-size="12" font-weight="800" fill="#00B8E6" font-family="Inter">£300</text>
+          <rect x="330" y="112" width="100" height="36" rx="4" fill="rgba(201, 164, 92, 0.28)" stroke="var(--gold)" stroke-width="2"/>
+          <text x="380" y="135" text-anchor="middle" font-size="12" font-weight="800" fill="#C9A45C" font-family="Inter">£300</text>
           <rect x="430" y="112" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.12)"/>
           <text x="480" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#f59e0b" font-family="Inter">£288</text>
           <rect x="530" y="112" width="100" height="36" rx="4" fill="rgba(245, 158, 11, 0.2)"/>
@@ -1770,19 +2733,19 @@
       <svg viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="barGradCyan" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#00B8E6" stop-opacity="0.6"/>
+            <stop offset="0%" stop-color="#C9A45C" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#A88540" stop-opacity="0.65"/>
           </linearGradient>
           <linearGradient id="barGradPurple" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#c84dff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#AD2BEE" stop-opacity="0.6"/>
+            <stop offset="0%" stop-color="#6A88B3" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#4A6A95" stop-opacity="0.6"/>
           </linearGradient>
           <linearGradient id="barGradRed" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#ef4444" stop-opacity="0.6"/>
+            <stop offset="0%" stop-color="#B8564A" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#94332B" stop-opacity="0.7"/>
           </linearGradient>
           <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
             <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
@@ -1796,63 +2759,63 @@
         <text x="72" y="264" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£250k</text>
         <text x="72" y="184" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£500k</text>
         <text x="72" y="104" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£750k</text>
-        <!-- Westgate Street comps (cyan) -->
-        <rect data-animate="true" x="100" y="167" width="55" height="173" rx="3" fill="url(#barGradCyan)"/>
-        <text x="127" y="162" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£540k</text>
-        <text x="127" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">45-49 WGS</text>
-        <text x="127" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Nov 2022</text>
+        <!-- Westgate Street comps (gold) -->
+        <rect data-animate="true" x="100" y="167" width="55" height="173" rx="2" fill="url(#barGradCyan)"/>
+        <text x="127" y="162" font-size="11" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£540k</text>
+        <text x="127" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">45-49 WGS</text>
+        <text x="127" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Nov 2022</text>
 
-        <rect data-animate="true" x="170" y="247" width="55" height="93" rx="3" fill="url(#barGradCyan)"/>
-        <text x="197" y="242" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£290k</text>
-        <text x="197" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">42 WGS</text>
-        <text x="197" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Jan 2025</text>
+        <rect data-animate="true" x="170" y="247" width="55" height="93" rx="2" fill="url(#barGradCyan)"/>
+        <text x="197" y="242" font-size="11" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£290k</text>
+        <text x="197" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">42 WGS</text>
+        <text x="197" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Jan 2025</text>
 
-        <rect data-animate="true" x="240" y="265" width="55" height="75" rx="3" fill="url(#barGradCyan)"/>
-        <text x="267" y="260" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£235k</text>
-        <text x="267" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">50-54 WGS</text>
-        <text x="267" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Apr 2025</text>
+        <rect data-animate="true" x="240" y="265" width="55" height="75" rx="2" fill="url(#barGradCyan)"/>
+        <text x="267" y="260" font-size="11" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£235k</text>
+        <text x="267" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">50-54 WGS</text>
+        <text x="267" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Apr 2025</text>
 
-        <rect data-animate="true" x="310" y="231" width="55" height="109" rx="3" fill="url(#barGradCyan)"/>
-        <text x="337" y="226" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£342k</text>
-        <text x="337" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">28 WGS</text>
-        <text x="337" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Feb 2022</text>
+        <rect data-animate="true" x="310" y="231" width="55" height="109" rx="2" fill="url(#barGradCyan)"/>
+        <text x="337" y="226" font-size="11" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£342k</text>
+        <text x="337" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">28 WGS</text>
+        <text x="337" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Feb 2022</text>
 
-        <rect data-animate="true" x="380" y="284" width="55" height="56" rx="3" fill="url(#barGradCyan)"/>
-        <text x="407" y="279" font-size="11" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£174k</text>
-        <text x="407" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">44 WGS</text>
-        <text x="407" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">May 2019</text>
+        <rect data-animate="true" x="380" y="284" width="55" height="56" rx="2" fill="url(#barGradCyan)"/>
+        <text x="407" y="279" font-size="11" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£174k</text>
+        <text x="407" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">44 WGS</text>
+        <text x="407" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">May 2019</text>
 
-        <!-- Wider Ipswich comps (purple) -->
-        <rect data-animate="true" x="470" y="180" width="55" height="160" rx="3" fill="url(#barGradPurple)"/>
-        <text x="497" y="175" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£500k</text>
-        <text x="497" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">21-23 Tavern</text>
-        <text x="497" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">May 2025</text>
+        <!-- Wider Ipswich comps (muted navy) -->
+        <rect data-animate="true" x="470" y="180" width="55" height="160" rx="2" fill="url(#barGradPurple)"/>
+        <text x="497" y="175" font-size="11" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£500k</text>
+        <text x="497" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">21-23 Tavern</text>
+        <text x="497" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">May 2025</text>
 
-        <rect data-animate="true" x="540" y="192" width="55" height="148" rx="3" fill="url(#barGradPurple)"/>
-        <text x="567" y="187" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£463k</text>
-        <text x="567" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">25-27 Tavern</text>
-        <text x="567" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Jul 2024</text>
+        <rect data-animate="true" x="540" y="192" width="55" height="148" rx="2" fill="url(#barGradPurple)"/>
+        <text x="567" y="187" font-size="11" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£463k</text>
+        <text x="567" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">25-27 Tavern</text>
+        <text x="567" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Jul 2024</text>
 
-        <rect data-animate="true" x="610" y="44" width="55" height="296" rx="3" fill="url(#barGradPurple)"/>
-        <text x="637" y="39" font-size="11" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£925k</text>
-        <text x="637" y="360" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">24 Tavern</text>
-        <text x="637" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Oct 2024</text>
+        <rect data-animate="true" x="610" y="44" width="55" height="296" rx="2" fill="url(#barGradPurple)"/>
+        <text x="637" y="39" font-size="11" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£925k</text>
+        <text x="637" y="360" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">24 Tavern</text>
+        <text x="637" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Oct 2024</text>
 
-        <!-- Subject (red) -->
-        <rect data-animate="true" x="720" y="237" width="60" height="103" rx="3" fill="url(#barGradRed)" filter="url(#glow)"/>
-        <text x="750" y="230" font-size="12" text-anchor="middle" fill="#ff6b6b" font-weight="700" font-family="Inter">£320k</text>
-        <text x="750" y="360" font-size="10" text-anchor="middle" fill="#ff6b6b" font-weight="600" font-family="Inter">SUBJECT</text>
-        <text x="750" y="372" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">Guide Price</text>
+        <!-- Subject (deep red) -->
+        <rect data-animate="true" x="720" y="237" width="60" height="103" rx="2" fill="url(#barGradRed)" filter="url(#glow)"/>
+        <text x="750" y="230" font-size="12" text-anchor="middle" fill="#94332B" font-weight="700" font-family="Inter">£320k</text>
+        <text x="750" y="360" font-size="10" text-anchor="middle" fill="#94332B" font-weight="600" font-family="Inter">SUBJECT</text>
+        <text x="750" y="372" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">Guide Price</text>
         <!-- Subject dashed line -->
-        <line x1="720" y1="237" x2="870" y2="237" stroke="#ef4444" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
-        
+        <line x1="720" y1="237" x2="870" y2="237" stroke="#94332B" stroke-width="1" stroke-dasharray="6,3" opacity="0.45"/>
+
         <!-- Legend -->
         <rect x="100" y="400" width="12" height="12" rx="2" fill="url(#barGradCyan)"/>
-        <text x="118" y="410" font-size="10" fill="#888" font-family="Inter">Westgate Street</text>
+        <text x="118" y="410" font-size="10" fill="#6A6A68" font-family="Inter">Westgate Street</text>
         <rect x="240" y="400" width="12" height="12" rx="2" fill="url(#barGradPurple)"/>
-        <text x="258" y="410" font-size="10" fill="#888" font-family="Inter">Wider Ipswich (Tavern St)</text>
+        <text x="258" y="410" font-size="10" fill="#6A6A68" font-family="Inter">Wider Ipswich (Tavern St)</text>
         <rect x="430" y="400" width="12" height="12" rx="2" fill="url(#barGradRed)"/>
-        <text x="448" y="410" font-size="10" fill="#888" font-family="Inter">Subject Property (Guide)</text>
+        <text x="448" y="410" font-size="10" fill="#6A6A68" font-family="Inter">Subject Property (Guide)</text>
       </svg>
     </div>
 
@@ -1862,16 +2825,16 @@
       <svg viewBox="0 0 900 450" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="rentalCyan" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#00B8E6" stop-opacity="0.5"/>
+            <stop offset="0%" stop-color="#C9A45C" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#A88540" stop-opacity="0.6"/>
           </linearGradient>
           <linearGradient id="rentalPurple" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#c84dff" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#AD2BEE" stop-opacity="0.5"/>
+            <stop offset="0%" stop-color="#6A88B3" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#4A6A95" stop-opacity="0.55"/>
           </linearGradient>
           <linearGradient id="rentalGreen" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#34d399" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#10b981" stop-opacity="0.5"/>
+            <stop offset="0%" stop-color="#5FA486" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#3F7E5E" stop-opacity="0.55"/>
           </linearGradient>
         </defs>
         <!-- Grid -->
@@ -1888,67 +2851,67 @@
         <text x="72" y="70" font-size="10" text-anchor="end" fill="#666" font-family="Inter">£120</text>
         <text x="20" y="200" font-size="9" fill="#555" font-family="Inter" transform="rotate(-90 20 200)" text-anchor="middle">£ per sq ft (pa)</text>
 
-        <!-- Ipswich comps (cyan) -->
-        <rect data-animate="true" x="105" y="293" width="55" height="37" rx="3" fill="url(#rentalCyan)"/>
-        <text x="132" y="288" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£16.62</text>
-        <text x="132" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">7 Westgate St</text>
-        <text x="132" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">2,707 sqft</text>
+        <!-- Ipswich comps (gold) -->
+        <rect data-animate="true" x="105" y="293" width="55" height="37" rx="2" fill="url(#rentalCyan)"/>
+        <text x="132" y="288" font-size="10" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£16.62</text>
+        <text x="132" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">7 Westgate St</text>
+        <text x="132" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">2,707 sqft</text>
 
-        <rect data-animate="true" x="175" y="253" width="55" height="77" rx="3" fill="url(#rentalCyan)"/>
-        <text x="202" y="248" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£34.80</text>
-        <text x="202" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">23A Buttermarket</text>
-        <text x="202" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">819 sqft</text>
+        <rect data-animate="true" x="175" y="253" width="55" height="77" rx="2" fill="url(#rentalCyan)"/>
+        <text x="202" y="248" font-size="10" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£34.80</text>
+        <text x="202" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">23A Buttermarket</text>
+        <text x="202" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">819 sqft</text>
 
-        <rect data-animate="true" x="245" y="235" width="55" height="95" rx="3" fill="url(#rentalCyan)"/>
-        <text x="272" y="230" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£43.17</text>
-        <text x="272" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">11 Thoroughfare</text>
-        <text x="272" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">249 sqft</text>
+        <rect data-animate="true" x="245" y="235" width="55" height="95" rx="2" fill="url(#rentalCyan)"/>
+        <text x="272" y="230" font-size="10" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£43.17</text>
+        <text x="272" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">11 Thoroughfare</text>
+        <text x="272" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">249 sqft</text>
 
-        <rect data-animate="true" x="315" y="250" width="55" height="80" rx="3" fill="url(#rentalCyan)"/>
-        <text x="342" y="245" font-size="10" text-anchor="middle" fill="#00d4ff" font-weight="600" font-family="Inter">£36.57</text>
-        <text x="342" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">2-4 Upp Brook St</text>
-        <text x="342" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">957 sqft</text>
+        <rect data-animate="true" x="315" y="250" width="55" height="80" rx="2" fill="url(#rentalCyan)"/>
+        <text x="342" y="245" font-size="10" text-anchor="middle" fill="#A88540" font-weight="600" font-family="Inter">£36.57</text>
+        <text x="342" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">2-4 Upp Brook St</text>
+        <text x="342" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">957 sqft</text>
 
         <!-- Separator line -->
-        <line x1="395" y1="50" x2="395" y2="340" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
-        <text x="398" y="50" font-size="8" fill="#555" font-family="Inter">WALTHAM FOREST (TIER 1 ONS)</text>
+        <line x1="395" y1="50" x2="395" y2="340" stroke="rgba(22, 32, 58, 0.18)" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="398" y="50" font-size="8" fill="#8A8374" font-family="Inter" letter-spacing="1.5">WALTHAM FOREST (TIER 1 ONS)</text>
 
-        <!-- Waltham Forest comps (purple) — Tier 1 ONS match -->
-        <rect data-animate="true" x="420" y="227" width="55" height="103" rx="3" fill="url(#rentalPurple)"/>
-        <text x="447" y="222" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£47.00</text>
-        <text x="447" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">27 High St</text>
-        <text x="447" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">800 sqft</text>
+        <!-- Waltham Forest comps (muted navy) — Tier 1 ONS match -->
+        <rect data-animate="true" x="420" y="227" width="55" height="103" rx="2" fill="url(#rentalPurple)"/>
+        <text x="447" y="222" font-size="10" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£47.00</text>
+        <text x="447" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">27 High St</text>
+        <text x="447" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">800 sqft</text>
 
-        <rect data-animate="true" x="490" y="282" width="55" height="48" rx="3" fill="url(#rentalPurple)"/>
-        <text x="517" y="277" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£21.86</text>
-        <text x="517" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">213 Leytonstone</text>
-        <text x="517" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">915 sqft</text>
+        <rect data-animate="true" x="490" y="282" width="55" height="48" rx="2" fill="url(#rentalPurple)"/>
+        <text x="517" y="277" font-size="10" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£21.86</text>
+        <text x="517" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">213 Leytonstone</text>
+        <text x="517" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">915 sqft</text>
 
-        <rect data-animate="true" x="560" y="236" width="55" height="94" rx="3" fill="url(#rentalPurple)"/>
-        <text x="587" y="231" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£42.86</text>
-        <text x="587" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">12 Station Rd</text>
-        <text x="587" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">700 sqft</text>
+        <rect data-animate="true" x="560" y="236" width="55" height="94" rx="2" fill="url(#rentalPurple)"/>
+        <text x="587" y="231" font-size="10" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£42.86</text>
+        <text x="587" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">12 Station Rd</text>
+        <text x="587" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">700 sqft</text>
 
-        <rect data-animate="true" x="630" y="260" width="55" height="70" rx="3" fill="url(#rentalPurple)"/>
-        <text x="657" y="255" font-size="10" text-anchor="middle" fill="#c84dff" font-weight="600" font-family="Inter">£31.70</text>
-        <text x="657" y="350" font-size="9" text-anchor="middle" fill="#888" font-family="Inter">93 Upper Clapton</text>
-        <text x="657" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">631 sqft</text>
+        <rect data-animate="true" x="630" y="260" width="55" height="70" rx="2" fill="url(#rentalPurple)"/>
+        <text x="657" y="255" font-size="10" text-anchor="middle" fill="#4A6A95" font-weight="600" font-family="Inter">£31.70</text>
+        <text x="657" y="350" font-size="9" text-anchor="middle" fill="#6A6A68" font-family="Inter">93 Upper Clapton</text>
+        <text x="657" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">631 sqft</text>
 
         <!-- Subject (green) -->
-        <rect data-animate="true" x="730" y="293" width="60" height="37" rx="3" fill="url(#rentalGreen)" filter="url(#glow)"/>
-        <text x="760" y="286" font-size="11" text-anchor="middle" fill="#34d399" font-weight="700" font-family="Inter">£15.00</text>
-        <text x="760" y="350" font-size="10" text-anchor="middle" fill="#34d399" font-weight="600" font-family="Inter">SUBJECT EST</text>
-        <text x="760" y="362" font-size="8" text-anchor="middle" fill="#555" font-family="Inter">1,444 sqft (GF)</text>
+        <rect data-animate="true" x="730" y="293" width="60" height="37" rx="2" fill="url(#rentalGreen)" filter="url(#glow)"/>
+        <text x="760" y="286" font-size="11" text-anchor="middle" fill="#3F7E5E" font-weight="700" font-family="Inter">£15.00</text>
+        <text x="760" y="350" font-size="10" text-anchor="middle" fill="#3F7E5E" font-weight="600" font-family="Inter">SUBJECT EST</text>
+        <text x="760" y="362" font-size="8" text-anchor="middle" fill="#8A8374" font-family="Inter">1,444 sqft (GF)</text>
         <!-- Subject dashed line -->
-        <line x1="105" y1="297" x2="395" y2="297" stroke="#34d399" stroke-width="1" stroke-dasharray="6,3" opacity="0.4"/>
+        <line x1="105" y1="297" x2="395" y2="297" stroke="#3F7E5E" stroke-width="1" stroke-dasharray="6,3" opacity="0.4"/>
 
         <!-- Legend -->
         <rect x="105" y="395" width="12" height="12" rx="2" fill="url(#rentalCyan)"/>
-        <text x="123" y="405" font-size="10" fill="#888" font-family="Inter">Ipswich Asking Rents</text>
+        <text x="123" y="405" font-size="10" fill="#6A6A68" font-family="Inter">Ipswich Asking Rents</text>
         <rect x="280" y="395" width="12" height="12" rx="2" fill="url(#rentalPurple)"/>
-        <text x="298" y="405" font-size="10" fill="#888" font-family="Inter">Waltham Forest (Tier 1 ONS)</text>
+        <text x="298" y="405" font-size="10" fill="#6A6A68" font-family="Inter">Waltham Forest (Tier 1 ONS)</text>
         <rect x="480" y="395" width="12" height="12" rx="2" fill="url(#rentalGreen)"/>
-        <text x="498" y="405" font-size="10" fill="#888" font-family="Inter">Subject Estimated Rent (GF only)</text>
+        <text x="498" y="405" font-size="10" fill="#6A6A68" font-family="Inter">Subject Estimated Rent (GF only)</text>
       </svg>
     </div>
   </div>
@@ -3073,7 +4036,7 @@
 
     <h3 class="subsection-title has-tooltip" data-source="Adopted value derived from: ERV £36k pa (weighted from 5 Ipswich rental comps, size-adjusted) capitalised at 12% ARY (secondary retail baseline 10-11% + 1% property-specific risk). As-is deductions: 12-month void, £50k CapEx (mid-range), £9k letting costs. Downside: £30k rent / 13% yield scenario.">Adopted Value<span class="source-icon">i</span></h3>
 
-    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.08), rgba(0, 184, 230, 0.08)); border-left: 3px solid var(--purple);">
+    <div class="card" style="background: linear-gradient(135deg, rgba(201, 164, 92, 0.10), rgba(201, 164, 92, 0.02)); border-left: 2px solid var(--gold);">
       <div style="font-size: 14px; line-height: 1.8; color: #aaa;">
         <p style="margin-bottom: 10px;">We adopt the following values for this asset:</p>
         <table style="margin-bottom: 15px;">
@@ -3209,7 +4172,7 @@
 
     <h3 class="subsection-title">Valuation Conclusion</h3>
 
-    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.08), rgba(0, 184, 230, 0.08)); border-left-color: var(--purple);">
+    <div class="card" style="background: linear-gradient(135deg, rgba(201, 164, 92, 0.10), rgba(201, 164, 92, 0.02)); border-left-color: var(--gold);">
       <div style="font-size: 14px; line-height: 1.8; color: var(--text-dark);">
         <p style="margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">
           Stabilised Market Value (assuming fully let):
@@ -3725,7 +4688,7 @@
       </tbody>
     </table>
 
-    <div class="card" style="background: linear-gradient(135deg, rgba(173, 43, 238, 0.1), rgba(0, 184, 230, 0.1)); border: 1px solid rgba(173, 43, 238, 0.3); margin-top: 30px;">
+    <div class="card" style="background: linear-gradient(135deg, rgba(201, 164, 92, 0.10), rgba(201, 164, 92, 0.02)); border: 1px solid var(--hairline-gold); margin-top: 30px;">
       <p style="font-size: 15px; color: var(--text-main); margin: 0; line-height: 1.7; font-weight: 500; text-align: center;">
         A higher-risk repositioning opportunity suited to experienced investors with a clear asset management plan. At the right price (£250k–£270k), the freehold tenure and conversion potential provide a credible path to value creation — but execution risk is significant, and the buyer must be prepared to carry the asset through an extended void.
       </p>
@@ -3755,9 +4718,182 @@
 
   </main>
 </div>
+<!-- html2pdf.js bundle (html2canvas + jsPDF) for the Download Report button -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 <script>
+// === DOWNLOAD REPORT ===
+// Primary: use html2pdf.js to render the report DOM straight to a multi-page PDF.
+// Fallback: browser print dialog (our @media print stylesheet produces a good PDF too).
+function downloadReport() {
+  const btn = document.querySelector('.cta-gold');
+  const originalBtnText = btn ? btn.textContent : null;
+  const setBtn = (txt, disabled) => {
+    if (!btn) return;
+    btn.textContent = txt;
+    btn.style.pointerEvents = disabled ? 'none' : '';
+    btn.style.opacity = disabled ? '0.7' : '';
+  };
+
+  const restore = () => {
+    document.body.classList.remove('exporting');
+    hideOverlay();
+    setBtn(originalBtnText, false);
+  };
+
+  const showOverlay = () => {
+    let ov = document.getElementById('pdf-overlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'pdf-overlay';
+      ov.innerHTML =
+        '<div class="pdf-overlay-card">' +
+          '<div class="pdf-overlay-spinner"></div>' +
+          '<div class="pdf-overlay-title">Preparing Report</div>' +
+          '<div class="pdf-overlay-sub">Rendering pages &amp; charts to PDF…</div>' +
+        '</div>';
+      document.body.appendChild(ov);
+    }
+    ov.classList.add('visible');
+  };
+  const hideOverlay = () => {
+    const ov = document.getElementById('pdf-overlay');
+    if (ov) ov.classList.remove('visible');
+  };
+
+  const fallbackToPrint = (reason) => {
+    console.warn('html2pdf path unavailable — falling back to window.print().', reason || '');
+    const originalTitle = document.title;
+    document.title = 'SmartSource — 41-43 Westgate Street, Ipswich — Valuation Report';
+    const onAfter = () => {
+      document.title = originalTitle;
+      window.removeEventListener('afterprint', onAfter);
+      restore();
+    };
+    window.addEventListener('afterprint', onAfter);
+    setTimeout(() => window.print(), 50);
+  };
+
+  const html2canvasFn = window.html2canvas;
+  const JsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+
+  if (!html2canvasFn || !JsPDF) {
+    fallbackToPrint('html2pdf dependencies not loaded');
+    return;
+  }
+
+  setBtn('Preparing…', true);
+  showOverlay();
+  document.body.classList.add('exporting');
+
+  // Render each .cover-page / .page element to its own canvas, then assemble the PDF.
+  // This avoids the single-canvas max-dimension limit (~32,767 px) that was causing blank output.
+  const renderSectionsToPdf = async () => {
+    const sections = Array.from(document.querySelectorAll('.cover-page, .page'));
+    if (!sections.length) throw new Error('No pages found to render.');
+
+    const pdf = new JsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+    pdf.setProperties({
+      title: 'SmartSource — 41-43 Westgate Street, Ipswich — Valuation Report',
+      subject: 'AI-assisted investment analysis',
+      author: 'SmartSource'
+    });
+
+    const pageWidthMm  = 210;
+    const pageHeightMm = 297;
+    const marginXMm    = 10;
+    const marginYMm    = 10;
+    const contentWMm   = pageWidthMm - marginXMm * 2;
+    const contentHMm   = pageHeightMm - marginYMm * 2;
+
+    let isFirstPdfPage = true;
+
+    for (let i = 0; i < sections.length; i++) {
+      const el = sections[i];
+
+      // Update overlay progress
+      const sub = document.querySelector('.pdf-overlay-sub');
+      if (sub) sub.textContent = 'Rendering page ' + (i + 1) + ' of ' + sections.length + '…';
+
+      // Let the browser paint between heavy canvas ops
+      await new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
+
+      const canvas = await html2canvasFn(el, {
+        scale: 1.8,
+        useCORS: true,
+        logging: false,
+        letterRendering: true,
+        backgroundColor: '#FFFFFF',
+        imageTimeout: 15000,
+        windowWidth: 1180
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.93);
+
+      // Scale rendered canvas to fit the A4 content width, then slice across pages if too tall
+      const imgWMm = contentWMm;
+      const imgHMm = (canvas.height * imgWMm) / canvas.width;
+
+      if (imgHMm <= contentHMm + 0.5) {
+        if (!isFirstPdfPage) pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', marginXMm, marginYMm, imgWMm, imgHMm, undefined, 'FAST');
+        isFirstPdfPage = false;
+      } else {
+        const sliceCount = Math.ceil(imgHMm / contentHMm);
+        for (let s = 0; s < sliceCount; s++) {
+          if (!isFirstPdfPage) pdf.addPage();
+          // Shift image upward so the slice we want sits inside the page content area;
+          // anything above/below the page gets clipped by the PDF page bounds.
+          const yOffset = marginYMm - s * contentHMm;
+          pdf.addImage(imgData, 'JPEG', marginXMm, yOffset, imgWMm, imgHMm, undefined, 'FAST');
+          isFirstPdfPage = false;
+        }
+      }
+    }
+
+    pdf.save('SmartSource-41-43-Westgate-Street-Ipswich-Valuation.pdf');
+  };
+
+  // Let the browser paint the overlay and apply .exporting before heavy work kicks off
+  setTimeout(() => {
+    renderSectionsToPdf()
+      .then(restore)
+      .catch(err => {
+        console.error('PDF generation failed — falling back to native print.', err);
+        restore();
+        fallbackToPrint(err && err.message);
+      });
+  }, 60);
+}
+
 // === INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ===
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Auto-apply reveal to direct children of each .section so every block animates in ---
+  // Tables and chart containers get a gentle scale-in; everything else gets the standard fade-up.
+  document.querySelectorAll('.section').forEach(section => {
+    const kids = Array.from(section.children);
+    kids.forEach((child, i) => {
+      if (child.classList.contains('reveal') ||
+          child.classList.contains('reveal-left') ||
+          child.classList.contains('reveal-scale')) return;
+      if (child.tagName === 'TABLE' || child.classList.contains('chart-container')) {
+        child.classList.add('reveal-scale');
+      } else {
+        child.classList.add('reveal');
+      }
+      child.style.transitionDelay = Math.min(i * 0.05, 0.3) + 's';
+    });
+  });
+
+  // --- Also reveal top-level hero children (they live outside .section) ---
+  document.querySelectorAll('.cover-page .cover-content > *').forEach((el, i) => {
+    if (!el.classList.contains('reveal') &&
+        !el.classList.contains('reveal-left') &&
+        !el.classList.contains('reveal-scale')) {
+      el.classList.add('reveal');
+      el.style.transitionDelay = (0.1 + i * 0.08) + 's';
+    }
+  });
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
